@@ -286,7 +286,7 @@ export default function NormalizationSimulation({ mode = "LEARNING" }: Normaliza
                 <ul className="list-disc ml-5 text-sm text-teal-800 space-y-1">
                     <li><strong>MVD:</strong> Emp ID has Phones {`{111, 222}`}.</li>
                     <li><strong>MVD:</strong> Emp ID has Assignments (Proj P1, Skill Java).</li>
-                    <li>These are independent! `Emp ->> Phone` vs `Emp ->> (Proj, Skill)`.</li>
+                    <li>These are independent! `Emp -&gt;&gt; Phone` vs `Emp -&gt;&gt; (Proj, Skill)`.</li>
                     <li><strong>Action:</strong> Isolate Phone numbers.</li>
                 </ul>
             </div>
@@ -370,7 +370,7 @@ export default function NormalizationSimulation({ mode = "LEARNING" }: Normaliza
             <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-lg">
                 <h3 className="font-bold text-indigo-800 mb-2 flex items-center gap-2"><Share2 size={18} /> Fifth Normal Form (5NF)</h3>
                 <p className="text-sm text-indigo-700 mb-4">
-                    <strong>Logic:</strong> We assume validity of the ternary rule (If Emp knows Skill, and Proj needs Skill, and Emp on Proj -> Emp uses Skill on Proj).
+                    <strong>Logic:</strong> We assume validity of the ternary rule (If Emp knows Skill, and Proj needs Skill, and Emp on Proj -&gt; Emp uses Skill on Proj).
                     <br />
                     We decompose `Proj_Allocation` into 3 smaller tables.
                 </p>

@@ -489,7 +489,7 @@ export default function SQLQueriesSimulation({ mode = "LEARNING" }: SQLQueriesSi
 
                             <div className="bg-green-50 p-4 rounded mb-4">
                                 <h4 className="font-bold text-xs uppercase text-green-800 mb-2">Step 2: Outer Query (Filter Students)</h4>
-                                <code className="block bg-white p-2 rounded border border-green-200 text-xs mb-2">SELECT Name, Marks FROM STUDENT WHERE Marks > {cutoff};</code>
+                                <code className="block bg-white p-2 rounded border border-green-200 text-xs mb-2">SELECT Name, Marks FROM STUDENT WHERE Marks &gt; {cutoff};</code>
 
                                 <div className="bg-white border rounded mt-3">
                                     <table className="w-full text-xs">
