@@ -1,22 +1,29 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, FlaskConical } from "lucide-react";
+import { ArrowLeft, FlaskConical, BookOpen, ChevronRight } from "lucide-react";
 import { getLabById } from "@/lib/labs/registry";
 import { LAB_CONTENT } from "@/lib/labs/rich-content";
+import { Badge } from "@/components/ui/badge";
+import { use } from "react";
 
-export default async function PracticalDetail({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
+export default function PracticalDetail({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params);
+
     const lab = getLabById(id);
     const content = LAB_CONTENT[id];
 
     if (!lab || !content) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold text-gray-800 mb-4">Experiment Not Found</h1>
-                    <p className="text-gray-600 mb-6">The requested experiment ID "{id}" does not exist.</p>
+            <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black">
+                <div className="text-center space-y-4">
+                    <h1 className="text-4xl font-black uppercase tracking-tighter">Experiment Not Found</h1>
+                    <p className="text-gray-500 font-medium">The requested experiment ID <span className="font-mono bg-gray-100 px-1 rounded">{id}</span> does not exist.</p>
                     <Link href="/dashboard/cn">
-                        <Button>Return to Dashboard</Button>
+                        <Button className="h-12 px-8 uppercase font-bold tracking-wider rounded-none bg-black text-white hover:bg-gray-800">
+                            Return to Dashboard
+                        </Button>
                     </Link>
                 </div>
             </div>
@@ -24,59 +31,102 @@ export default async function PracticalDetail({ params }: { params: Promise<{ id
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
-            <header className="bg-white border-b shadow-sm sticky top-0 z-10">
+        <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white">
+            <header className="bg-white border-b-2 border-black/5 sticky top-0 z-20 backdrop-blur-md bg-white/80">
                 <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-                    <Link href="/dashboard/cn" className="text-gray-500 hover:text-black hover:bg-gray-100 p-1 rounded-full transition-colors">
-                        <ArrowLeft className="h-5 w-5" />
+                    <Link href="/dashboard/cn">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-black/5">
+                            <ArrowLeft className="h-4 w-4" />
+                        </Button>
                     </Link>
-                    <span className="text-gray-300">|</span>
-                    <h1 className="text-lg font-bold text-gray-800 truncate">{lab.metadata.title}</h1>
+                    <div className="h-4 w-[2px] bg-black/10"></div>
+                    <span className="text-sm font-bold uppercase tracking-wider text-gray-400">CN</span>
+                    <ChevronRight className="h-4 w-4 text-gray-300" />
+                    <h1 className="text-lg font-bold uppercase tracking-tight truncate max-w-md">{lab.metadata.title}</h1>
                 </div>
             </header>
 
-            <main className="container mx-auto px-4 py-8 flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <main className="container mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
 
                 {/* Left Content (Theory) */}
-                <div className="lg:col-span-2 space-y-8">
-                    <section className="bg-white p-6 rounded-lg shadow-sm border">
-                        <h2 className="text-xl font-bold text-[#1976d2] mb-4 border-b pb-2">Aim</h2>
-                        <p className="text-gray-700">{content.aim}</p>
-                    </section>
+                <div className="lg:col-span-8 space-y-12">
+                    <div>
+                        <div className="flex items-center gap-3 mb-4">
+                            <Badge variant="outline" className={`rounded-none uppercase text-[10px] font-bold tracking-widest border-2 ${lab.metadata.difficulty === 'Easy' ? 'border-green-600 text-green-700 bg-green-50' :
+                                    lab.metadata.difficulty === 'Medium' ? 'border-yellow-600 text-yellow-700 bg-yellow-50' :
+                                        'border-red-600 text-red-700 bg-red-50'
+                                }`}>
+                                {lab.metadata.difficulty}
+                            </Badge>
+                            <span className="text-xs font-bold text-gray-400 tracking-wider">EST. TIME: {lab.metadata.estimatedTime || "45 min"}</span>
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none mb-6 text-blue-600">
+                            {lab.metadata.title}
+                        </h1>
+                        <p className="text-xl text-gray-600 font-medium leading-relaxed border-l-4 border-blue-200 pl-6">
+                            {content.aim}
+                        </p>
+                    </div>
 
-                    <section className="bg-white p-6 rounded-lg shadow-sm border">
-                        <h2 className="text-xl font-bold text-[#1976d2] mb-4 border-b pb-2">Theory</h2>
-                        <div className="text-gray-700 prose max-w-none" dangerouslySetInnerHTML={{ __html: content.theory }} />
-                    </section>
+                    <div className="space-y-8">
+                        <section className="bg-white rounded-xl border-2 border-black/5 p-8 shadow-sm">
+                            <div className="flex items-center gap-3 mb-6 border-b-2 border-black/5 pb-4">
+                                <BookOpen className="w-6 h-6 text-blue-600" />
+                                <h2 className="text-2xl font-black uppercase tracking-tight">Theory</h2>
+                            </div>
+                            <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:uppercase prose-p:text-gray-600 prose-strong:text-black" dangerouslySetInnerHTML={{ __html: content.theory }} />
+                        </section>
 
-                    <section className="bg-white p-6 rounded-lg shadow-sm border">
-                        <h2 className="text-xl font-bold text-[#1976d2] mb-4 border-b pb-2">Procedure</h2>
-                        <div className="text-gray-700 prose max-w-none" dangerouslySetInnerHTML={{ __html: content.procedure }} />
-                    </section>
+                        <section className="bg-white rounded-xl border-2 border-black/5 p-8 shadow-sm">
+                            <div className="flex items-center gap-3 mb-6 border-b-2 border-black/5 pb-4">
+                                <FlaskConical className="w-6 h-6 text-blue-600" />
+                                <h2 className="text-2xl font-black uppercase tracking-tight">Procedure</h2>
+                            </div>
+                            <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:uppercase prose-p:text-gray-600 prose-strong:text-black" dangerouslySetInnerHTML={{ __html: content.procedure }} />
+                        </section>
+                    </div>
                 </div>
 
                 {/* Right Sidebar (Actions) */}
-                <div className="space-y-6">
-                    <div className="bg-white p-6 rounded-lg shadow-md border border-blue-200">
-                        <h3 className="font-bold text-lg mb-2 text-blue-900">Start Learning</h3>
-                        <p className="text-sm text-gray-500 mb-6">
-                            Enter the interactive simulation to visualize the layer architecture and packet flow.
-                        </p>
-                        <Link href={`/dashboard/cn/${id}/simulation`}>
-                            <Button className="w-full bg-[#1976d2] hover:bg-[#1565c0] text-lg font-bold py-6 shadow-lg hover:shadow-xl transition-all">
-                                <FlaskConical className="mr-2 h-6 w-6" />
-                                Enter Simulation
-                            </Button>
-                        </Link>
-                    </div>
+                <div className="lg:col-span-4 space-y-8">
+                    <div className="sticky top-24 space-y-8">
+                        <div className="bg-blue-50 border-2 border-blue-100 rounded-xl p-8 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-24 bg-blue-200/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                            <h3 className="font-black text-xl uppercase tracking-tight mb-2 relative z-10 text-blue-900">Ready to Start?</h3>
+                            <p className="text-sm font-medium text-blue-800/70 mb-8 relative z-10 leading-relaxed">
+                                Launch the virtual simulator to visualize the network layers and verify protocols.
+                            </p>
+                            <Link href={`/dashboard/cn/${id}/simulation`}>
+                                <Button className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white uppercase font-bold tracking-wider rounded-lg shadow-lg hover:shadow-blue-200 hover:-translate-y-1 transition-all relative z-10">
+                                    <FlaskConical className="mr-2 h-5 w-5" />
+                                    Launch Simulator
+                                </Button>
+                            </Link>
+                        </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow-sm border">
-                        <h3 className="font-bold text-md mb-4 text-gray-800">Resources</h3>
-                        <ul className="space-y-2 text-sm text-[#1976d2]">
-                            <li className="cursor-pointer hover:underline">Reference Guide (PDF)</li>
-                            <li className="cursor-pointer hover:underline">Animation Lecture</li>
-                            <li className="cursor-pointer hover:underline">Self Assessment Quiz</li>
-                        </ul>
+                        <div className="bg-white rounded-xl border-2 border-black/5 p-8">
+                            <h3 className="font-black text-lg uppercase tracking-tight mb-6">Resources</h3>
+                            <ul className="space-y-4">
+                                <li className="flex items-center gap-3 group cursor-pointer">
+                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+                                        <div className="w-2 h-2 rounded-full bg-gray-300 group-hover:bg-blue-500"></div>
+                                    </div>
+                                    <span className="font-bold text-sm text-gray-600 group-hover:text-black transition-colors uppercase tracking-wide">Reference Guide</span>
+                                </li>
+                                <li className="flex items-center gap-3 group cursor-pointer">
+                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+                                        <div className="w-2 h-2 rounded-full bg-gray-300 group-hover:bg-blue-500"></div>
+                                    </div>
+                                    <span className="font-bold text-sm text-gray-600 group-hover:text-black transition-colors uppercase tracking-wide">Animation Lecture</span>
+                                </li>
+                                <li className="flex items-center gap-3 group cursor-pointer">
+                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+                                        <div className="w-2 h-2 rounded-full bg-gray-300 group-hover:bg-blue-500"></div>
+                                    </div>
+                                    <span className="font-bold text-sm text-gray-600 group-hover:text-black transition-colors uppercase tracking-wide">Self Quiz</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
