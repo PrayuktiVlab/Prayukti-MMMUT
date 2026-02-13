@@ -1,58 +1,84 @@
 "use client";
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ChevronRight, PlayCircle } from "lucide-react";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { ExperimentList } from "@/components/dashboard/ExperimentList";
 
 const practicals = [
-    { id: 1, title: "Introduction to Classes and Objects", difficulty: "Easy" },
-    { id: 2, title: "Implementation of Inheritance", difficulty: "Medium" },
-    { id: 3, title: "Demonstration of Polymorphism", difficulty: "Medium" },
-    { id: 4, title: "Data Encapsulation and Abstraction", difficulty: "Hard" },
+    {
+        id: 1,
+        title: "Introduction to Classes and Objects",
+        difficulty: "Easy" as const,
+        href: "/dashboard/oops/1",
+        description: "Learn the fundamentals of OOP by creating classes, objects, and methods.",
+        duration: "35 mins"
+    },
+    {
+        id: 2,
+        title: "Implementation of Inheritance",
+        difficulty: "Medium" as const,
+        href: "/dashboard/oops/2",
+        description: "Understand simple, multilevel, and hierarchical inheritance with practical examples.",
+        duration: "45 mins"
+    },
+    {
+        id: 3,
+        title: "Demonstration of Polymorphism",
+        difficulty: "Medium" as const,
+        href: "/dashboard/oops/3",
+        description: "Explore compile-time and run-time polymorphism through method overloading and overriding.",
+        duration: "50 mins"
+    },
+    {
+        id: 4,
+        title: "Data Encapsulation and Abstraction",
+        difficulty: "Hard" as const,
+        href: "/dashboard/oops/4",
+        description: "Secure data using access specifiers and implement abstract classes and interfaces.",
+        duration: "60 mins"
+    },
 ];
 
 export default function OOPsPage() {
     return (
-        <div className="min-h-screen bg-gray-50">
-            <header className="bg-white border-b shadow-sm sticky top-0 z-10">
-                <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-                    <Link href="/dashboard" className="text-gray-500 hover:text-black hover:bg-gray-100 p-1 rounded-full transition-colors">Dashboard</Link>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                    <h1 className="text-xl font-bold text-[#7b1fa2]">Object Oriented Programming</h1>
-                </div>
-            </header>
+        <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
+            <Navbar />
 
-            <main className="container mx-auto px-4 py-8">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-800">List of Experiments</h2>
-                    <div className="flex gap-2">
-                        <Button variant="outline">Progress Report</Button>
+            <main className="flex-1 container mx-auto px-4 py-12">
+                {/* Header */}
+                <div className="mb-12">
+                    <div className="flex items-center gap-2 text-sm text-slate-500 mb-4 font-medium">
+                        <span>Dashboard</span>
+                        <span>/</span>
+                        <span className="text-primary">OOPs</span>
+                    </div>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div>
+                            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                                Object Oriented Programming
+                            </h1>
+                            <p className="text-slate-600 max-w-2xl leading-relaxed">
+                                Deep dive into modern software design paradigms with interactive coding exercises and visual memory models.
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                            <div className="text-center px-4 border-r border-slate-100">
+                                <span className="block text-2xl font-bold text-primary">{practicals.length}</span>
+                                <span className="text-xs text-slate-400 uppercase font-bold">Labs</span>
+                            </div>
+                            <div className="text-center px-4">
+                                <span className="block text-2xl font-bold text-green-600">0%</span>
+                                <span className="text-xs text-slate-400 uppercase font-bold">Progress</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-                    {practicals.map((p, index) => (
-                        <div key={p.id} className="p-4 border-b last:border-b-0 flex items-center justify-between hover:bg-gray-50 transition-colors group">
-                            <div className="flex items-center gap-4">
-                                <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-sm">
-                                    {index + 1}
-                                </div>
-                                <div>
-                                    <h3 className="font-medium text-gray-800">{p.title}</h3>
-                                    <span className={`text-xs px-2 py-0.5 rounded ${p.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
-                                        p.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                                        }`}>{p.difficulty}</span>
-                                </div>
-                            </div>
-                            <Link href={`/dashboard/oops/${p.id}`}>
-                                <Button variant="ghost" className="gap-2 text-[#7b1fa2] hover:text-[#6a1b9a] hover:bg-purple-50">
-                                    Start Practical <PlayCircle className="h-4 w-4" />
-                                </Button>
-                            </Link>
-                        </div>
-                    ))}
-                </div>
+                {/* Experiments List */}
+                <ExperimentList subject="Object Oriented Programming" experiments={practicals} />
             </main>
+
+            <Footer />
         </div>
     );
 }
