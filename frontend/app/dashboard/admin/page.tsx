@@ -67,6 +67,11 @@ export default function AdminDashboard() {
     const handleAddStudent = (newStudent: StudentMetric) => {
         const updatedData = [newStudent, ...data];
         setData(updatedData);
+
+        // Force immediate save and notify
+        localStorage.setItem('vlab_students', JSON.stringify(updatedData));
+        window.dispatchEvent(new Event('vlab_students_updated'));
+
         alert("Student added successfully to the system.");
     };
 

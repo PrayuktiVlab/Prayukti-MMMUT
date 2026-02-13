@@ -39,14 +39,35 @@ export default function TeacherDashboard() {
     const [data, setData] = useState<StudentMetric[]>([]);
     const [isClient, setIsClient] = useState(false);
 
-    useEffect(() => {
+    const loadData = () => {
         const storedData = localStorage.getItem('vlab_students');
         if (storedData) {
             setData(JSON.parse(storedData));
         } else {
             setData(MOCK_TEACHER_DATA);
         }
+    };
+
+    useEffect(() => {
+        loadData();
         setIsClient(true);
+
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === 'vlab_students') {
+                loadData();
+            }
+        };
+
+        // Listen for storage changes (cross-tab)
+        window.addEventListener('storage', handleStorageChange);
+
+        // Listen for custom event (same-tab/same-window updates)
+        window.addEventListener('vlab_students_updated', loadData);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('vlab_students_updated', loadData);
+        };
     }, []);
 
 
