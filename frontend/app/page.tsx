@@ -1,11 +1,17 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
-import { Twitter, Facebook, Linkedin, Instagram, BookOpen, FlaskConical, Microscope, Layers } from "lucide-react";
-import { SplineScene } from "@/components/ui/splite";
-import { Spotlight } from "@/components/ui/spotlight";
+import { Footer } from "@/components/layout/Footer";
+import { Hero } from "@/components/home/Hero";
+import { LabsGrid } from "@/components/home/LabsGrid";
 
 export default function Home() {
+    return (
+        <main className="min-h-screen bg-background font-sans antialiased">
+            <Navbar />
+            <Hero />
+            <LabsGrid />
+            <Footer />
+        </main>
+    );
   return (
     <div className="flex flex-col min-h-screen bg-white text-black selection:bg-orange-100 selection:text-orange-900">
       {/* Header with Integrated Navbar */}
