@@ -1,7 +1,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 
-export type Subject = "CN" | "OOPS" | "DLD";
+export type Subject = "CN" | "OOPS" | "DLD" | "MPMC";
 
 export interface LabMetadata {
     id: string;
