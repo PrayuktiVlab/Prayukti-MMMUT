@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, PlayCircle } from "lucide-react";
 import { getLabsBySubject } from "@/lib/labs/registry";
+import { Chatbot } from "@/components/lab/Chatbot";
 
 export default function DLDPage() {
     const labs = getLabsBySubject("DLD");
@@ -50,6 +51,7 @@ export default function DLDPage() {
                     ))}
                 </div>
             </main>
+            <Chatbot subject="DLD" />
         </div>
     );
 }
