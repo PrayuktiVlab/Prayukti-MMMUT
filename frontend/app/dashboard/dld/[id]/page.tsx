@@ -6,6 +6,7 @@ import { ArrowLeft, FlaskConical, BookOpen, ChevronRight } from "lucide-react";
 import { getLabById } from "@/lib/labs/registry";
 import { LAB_CONTENT } from "@/lib/labs/rich-content";
 import { Badge } from "@/components/ui/badge";
+import Footer from "@/components/layout/Footer";
 import { use } from "react";
 
 export default function PracticalDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -37,6 +38,7 @@ export default function PracticalDetail({ params }: { params: Promise<{ id: stri
         <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white">
             <header className="bg-white border-b-2 border-black/5 sticky top-0 z-20 backdrop-blur-md bg-white/80">
                 <div className="container mx-auto px-4 py-4 flex items-center gap-4">
+
                     <Link href="/dashboard/dld">
                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-black/5">
                             <ArrowLeft className="h-4 w-4" />
@@ -56,8 +58,8 @@ export default function PracticalDetail({ params }: { params: Promise<{ id: stri
                     <div>
                         <div className="flex items-center gap-3 mb-4">
                             <Badge variant="outline" className={`rounded-none uppercase text-[10px] font-bold tracking-widest border-2 ${lab.metadata.difficulty === 'Easy' ? 'border-green-600 text-green-700 bg-green-50' :
-                                    lab.metadata.difficulty === 'Medium' ? 'border-yellow-600 text-yellow-700 bg-yellow-50' :
-                                        'border-red-600 text-red-700 bg-red-50'
+                                lab.metadata.difficulty === 'Medium' ? 'border-yellow-600 text-yellow-700 bg-yellow-50' :
+                                    'border-red-600 text-red-700 bg-red-50'
                                 }`}>
                                 {lab.metadata.difficulty}
                             </Badge>
@@ -132,8 +134,9 @@ export default function PracticalDetail({ params }: { params: Promise<{ id: stri
                         </div>
                     </div>
                 </div>
-
             </main>
+
+            <Footer />
         </div>
     );
 }

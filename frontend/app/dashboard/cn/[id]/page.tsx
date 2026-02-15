@@ -6,6 +6,7 @@ import { ArrowLeft, FlaskConical, BookOpen, ChevronRight } from "lucide-react";
 import { getLabById } from "@/lib/labs/registry";
 import { LAB_CONTENT } from "@/lib/labs/rich-content";
 import { Badge } from "@/components/ui/badge";
+import Footer from "@/components/layout/Footer";
 import { use } from "react";
 import { Chatbot } from "@/components/lab/Chatbot";
 
@@ -34,6 +35,7 @@ export default function PracticalDetail({ params }: { params: Promise<{ id: stri
     return (
         <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white">
             <header className="bg-white border-b-2 border-black/5 sticky top-0 z-20 backdrop-blur-md bg-white/80">
+
                 <div className="container mx-auto px-4 py-4 flex items-center gap-4">
                     <Link href="/dashboard/cn">
                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-black/5">
@@ -130,9 +132,10 @@ export default function PracticalDetail({ params }: { params: Promise<{ id: stri
                         </div>
                     </div>
                 </div>
-
             </main>
             <Chatbot subject="CN" labTitle={lab.metadata.title} />
+
+            <Footer />
         </div>
     );
 }

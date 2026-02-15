@@ -1,9 +1,8 @@
+import { Navbar } from "@/components/layout/Navbar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/layout/Navbar";
-import { Twitter, Facebook, Linkedin, Instagram, BookOpen, FlaskConical, Microscope, Layers } from "lucide-react";
-import { SplineScene } from "@/components/ui/splite";
-import { Spotlight } from "@/components/ui/spotlight";
+import SplineScene from "@splinetool/react-spline";
+import { Twitter, Facebook, Linkedin } from "lucide-react";
 
 export default function Home() {
   return (

@@ -1,11 +1,14 @@
 "use client";
 
+
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, PlayCircle, ArrowLeft } from "lucide-react";
 import { getLabsBySubject } from "@/lib/labs/registry";
 import { Badge } from "@/components/ui/badge";
 import { Chatbot } from "@/components/lab/Chatbot";
+import Footer from "@/components/layout/Footer";
 
 export default function OOPSPage() {
     const labs = getLabsBySubject("OOPS");
@@ -13,6 +16,7 @@ export default function OOPSPage() {
     return (
         <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white">
             <header className="bg-white border-b-2 border-black/5 sticky top-0 z-20 backdrop-blur-md bg-white/80">
+
                 <div className="container mx-auto px-4 py-4 flex items-center gap-4">
                     <Link href="/dashboard">
                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-black/5">
@@ -72,5 +76,10 @@ export default function OOPSPage() {
             </main>
             <Chatbot subject="OOPS" />
         </div>
+
+            </main >
+
+            <Footer />
+        </div >
     );
 }
