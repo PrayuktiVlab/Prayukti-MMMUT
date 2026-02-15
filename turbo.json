@@ -34,5 +34,13 @@
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalDependencies": [
+    ".env",
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_USER",
+    "SMTP_PASS",
+    "GROQ_API_KEY"
+  ]
 }
