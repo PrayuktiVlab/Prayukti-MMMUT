@@ -28,6 +28,10 @@ export async function POST(req: Request) {
 
         // 2. Configure Transporter
         const smtpPort = parseInt(process.env.SMTP_PORT || '587');
+
+        console.log(`📧 Attempting SMTP Connection: ${smtpHost}:${smtpPort} (Secure: ${smtpPort === 465})`);
+        console.log(`👤 SMTP User: ${smtpUser}`);
+
         const transporter = nodemailer.createTransport({
             host: smtpHost,
             port: smtpPort,
@@ -36,15 +40,27 @@ export async function POST(req: Request) {
                 user: smtpUser,
                 pass: smtpPass,
             },
+            logger: true, // Log to console
+            debug: true, // Include debug info
+            connectionTimeout: 10000, // 10 seconds
+            greetingTimeout: 5000,    // 5 seconds
+            socketTimeout: 10000,     // 10 seconds
         });
 
         // Verify connection configuration
         try {
+            console.log("🔄 Verifying SMTP connection...");
             await transporter.verify();
             console.log("✅ SMTP Connection Verified");
         } catch (verifyError: any) {
             console.error("❌ SMTP Connection Verification Failed:", verifyError);
-            return NextResponse.json({ success: false, error: `SMTP Connection Failed: ${verifyError.message}` }, { status: 500 });
+            // Log full error object for debugging
+            console.error(JSON.stringify(verifyError, null, 2));
+            return NextResponse.json({
+                success: false,
+                error: `SMTP Connection Failed: ${verifyError.message || "Unknown Error"}`,
+                details: verifyError
+            }, { status: 500 });
         }
 
         // 3. Send Email
