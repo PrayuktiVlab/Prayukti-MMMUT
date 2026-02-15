@@ -45,6 +45,7 @@ export async function POST(req: Request) {
             connectionTimeout: 10000, // 10 seconds
             greetingTimeout: 5000,    // 5 seconds
             socketTimeout: 10000,     // 10 seconds
+            family: 4,                // Force IPv4 to avoid ENETUNREACH on IPv6
         });
 
         // Verify connection configuration
