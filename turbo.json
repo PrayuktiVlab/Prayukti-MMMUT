@@ -36,7 +36,9 @@
     }
   },
   "globalDependencies": [
-    ".env",
+    ".env"
+  ],
+  "globalEnv": [
     "SMTP_HOST",
     "SMTP_PORT",
     "SMTP_USER",
