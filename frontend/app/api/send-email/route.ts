@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import dns from 'dns';
+import env from '@/lib/env'; // Import strict loader
 
 export async function POST(req: Request) {
     try {
@@ -8,13 +9,14 @@ export async function POST(req: Request) {
 
         // 1. Check for SMTP credentials
         // Sanitize inputs to remove accidental whitespace
-        const smtpHost = process.env.SMTP_HOST?.trim();
-        const smtpUser = process.env.SMTP_USER?.trim();
-        const smtpPass = process.env.SMTP_PASS?.trim();
+        const smtpHost = env.SMTP_HOST?.trim();
+        const smtpUser = env.SMTP_USER?.trim();
+        const smtpPass = env.SMTP_PASS?.trim();
 
         if (!smtpHost || !smtpUser || !smtpPass) {
             console.error("❌ SMTP CONFIGURATION MISSING:");
             console.error(`- SMTP_HOST: ${smtpHost ? "Set" : "Missing"}`);
+            // ... (keep logs but avoid logging secrets explicitly if possible, though user/host is fine)
             console.error(`- SMTP_USER: ${smtpUser ? "Set" : "Missing"}`);
             console.error(`- SMTP_PASS: ${smtpPass ? "Set" : "Missing"}`);
             console.log("---------------------------------------------------");
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
 
         // 2. Configure Transporter
         // Default to Port 465 (Secure) if no port is specified, as 587 is timing out
-        let smtpPort = parseInt(process.env.SMTP_PORT?.trim() || '465');
+        let smtpPort = parseInt(env.SMTP_PORT?.trim() || '465');
         let useSecure = smtpPort === 465;
 
         // Auto-override for Gmail if the user has set 587 (which is failing)
