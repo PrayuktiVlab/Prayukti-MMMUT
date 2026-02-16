@@ -36,6 +36,15 @@ export default function Dashboard() {
             icon: "💻",
             color: "text-purple-600",
             description: "Learn the principles of encapsulation, inheritance, polymorphism, and abstraction."
+        },
+        {
+            id: "MPMC",
+            title: "Microprocessor and Microcontroller (MPMC)",
+            icon: "📟",
+            bg: "bg-green-100",
+            color: "bg-[#2e7d32]",
+            hoverColor: "hover:bg-[#1b5e20]",
+            description: "Study the architecture, programming, and interfacing of microprocessors and microcontrollers."
         }
     ];
 

@@ -1,5 +1,8 @@
+import React from "react";
+import dynamic from "next/dynamic";
+
 // Define strict types for the registry
-export type LabSubject = "DBMS" | "CN" | "OOPS" | "DLD";
+export type LabSubject = "DBMS" | "CN" | "OOPS" | "DLD" | "MPMC";
 export type LabType = "learning" | "experimental";
 export type LabDifficulty = "Easy" | "Medium" | "Hard";
 
