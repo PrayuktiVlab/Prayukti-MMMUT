@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import { checkRateLimit } from '@/lib/rate-limit';
 import env from '@/lib/env'; // Import strict loader
+import { Span } from 'next/dist/trace';
 
 const GROQ_API_KEY = env.GROQ_API_KEY;
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -48,7 +49,11 @@ export async function POST(req: Request) {
         const sanitizedLabTitle = labTitle ? labTitle.trim() : "";
 
         const systemPrompt = `You are a helpful and knowledgeable Lab Assistant for the subject "${sanitizedSubject}"${sanitizedLabTitle ? `, specifically assisting with the experiment "${sanitizedLabTitle}"` : ""}. 
-Your goal is to help students understand concepts related to ${sanitizedSubject}${sanitizedLabTitle ? ` and the "${sanitizedLabTitle}" experiment` : ""}.`;
+Your goal is to help students understand concepts related to ${sanitizedSubject}${sanitizedLabTitle ? ` and the "${sanitizedLabTitle}" experiment` : ""}.
+
+CRITICAL RULE:
+If the student asks a question that is NOT directly related to ${sanitizedSubject} or engineering syllabus, you MUST respond ONLY with the exact string: [OUT_OF_CONTEXT]
+Do not provide any other explanation or advice if the question is off-topic.`;
 
         const response = await fetch(API_URL, {
             method: 'POST',
@@ -63,22 +68,18 @@ Your goal is to help students understand concepts related to ${sanitizedSubject}
                         role: "system",
                         content: `${systemPrompt}
 
-Formatting Guidelines:
-
-Formatting Guidelines:
+Formatting Guidelines for on-topic questions:
 - **Structure**: Organize your response into clear sections with descriptive headers if needed.
 - **Highlighting**: Use **bolding** for key terms, definitions, and critical concepts.
 - **Clarity**: Use bullet points or numbered lists for steps, items, or multiple points.
-- **Conciseness**: Keep your answers accurate and easy to understand for engineering students.
-
-If the question is not related to ${sanitizedSubject} or engineering, politely redirect them to the subject matter.`
+- **Conciseness**: Keep your answers accurate and easy to understand for engineering students.`
                     },
                     {
                         role: "user",
                         content: sanitizedMessage
                     }
                 ],
-                temperature: 0.7,
+                temperature: 0.1, // Lower temperature for more consistent flagging
                 max_tokens: 1024,
                 top_p: 1,
                 stream: false,
@@ -92,14 +93,27 @@ If the question is not related to ${sanitizedSubject} or engineering, politely r
         }
 
         const data = await response.json();
-        const botResponse = data.choices?.[0]?.message?.content || "I'm having trouble processing that right now. Please try again.";
+        let botResponse = data.choices?.[0]?.message?.content || "I'm having trouble processing that right now. Please try again.";
 
-        return NextResponse.json({ response: botResponse.trim() });
+        // 3. Flagging Logic
+        let isFlagged = false;
+        if (botResponse.includes("[OUT_OF_CONTEXT]")) {
+            botResponse = "This question is out of context. I'm your AI advisor, here to help you find the perfect answer according to your syllabus for your learning journey. I'm specifically designed to help you with course recommendations and educational guidance.";
+            console.log("🚀 Shahjad Ali ");
+
+            botResponse = botResponse.replace(/\n/g, '<br>');
+            isFlagged = true;
+        }
+
+        return NextResponse.json({
+            response: botResponse.trim(),
+            flagged: isFlagged
+        });
 
     } catch (error: any) {
         console.error('Chat API Error:', error);
         return NextResponse.json({
-            error: 'Failed to fetch response from AI provider',
+            error: 'Failed to fetch response from AI provider , I am here to help you find the perfect answer according to your syllabus ',
             details: error.message
         }, { status: 500 });
     }

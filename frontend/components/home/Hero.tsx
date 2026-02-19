@@ -32,7 +32,7 @@ export function Hero() {
 
                         <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                             <Link href="/labs">
-                                <Button size="lg" className="h-14 px-8 text-base rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all">
+                                <Button size="lg" className="h-14 px-8 text-base rounded-full btn-gradient btn-interaction">
                                     Explore Labs <ArrowRight className="ml-2 w-5 h-5" />
                                 </Button>
                             </Link>
