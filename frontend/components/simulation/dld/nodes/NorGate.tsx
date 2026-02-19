@@ -1,12 +1,12 @@
-import { Handle, Position } from '@xyflow/react';
+import React, { memo } from 'react';
+import { NodeProps } from '@xyflow/react';
+import { SimpleLogicGateNode } from './SimpleLogicGateNode';
 
-export default function NorGate() {
-    return (
-        <div className="bg-white border-2 border-black rounded-lg w-16 h-16 flex items-center justify-center relative shadow-sm" style={{ borderRadius: '0 50% 50% 0' }}>
-            <div className="text-xs font-bold z-10">NOR</div>
-            <Handle type="target" position={Position.Left} id="a" style={{ top: '30%' }} />
-            <Handle type="target" position={Position.Left} id="b" style={{ top: '70%' }} />
-            <Handle type="source" position={Position.Right} />
-        </div>
-    );
-}
+const NorGate = memo((props: NodeProps) => {
+    // NOR Gate Path (Same as OR)
+    const path = "M 0,0 Q 30,0 50,20 Q 30,40 0,40 Q 15,20 0,0 Z";
+    return <SimpleLogicGateNode {...props} svgPath={path} label="NOR" inputs={2} showBubble={true} />;
+});
+
+NorGate.displayName = 'NorGate';
+export default NorGate;

@@ -1,67 +1,42 @@
-import { Handle, Position, useReactFlow, NodeProps, Node } from '@xyflow/react';
-import { useState } from 'react';
+import { Handle, Position } from '@xyflow/react';
 
-type OutputNodeData = {
-    label: string;
-    value?: number | boolean;
-};
-
-export default function OutputNode({ data, id }: NodeProps<Node<OutputNodeData>>) {
-    const isOn = data.value === true || data.value === 1;
-
-    const [isEditing, setIsEditing] = useState(false);
-    const [label, setLabel] = useState(data.label || 'Output');
-    const { setNodes } = useReactFlow();
-
-    const handleDoubleClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsEditing(true);
-    };
-
-    const handleBlur = () => {
-        setIsEditing(false);
-        setNodes((nds) => nds.map((n) => {
-            if (n.id === id) {
-                return {
-                    ...n,
-                    data: {
-                        ...n.data,
-                        label: label
-                    }
-                };
-            }
-            return n;
-        }));
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            handleBlur();
-        }
-    };
+export default function OutputNode({ data }: { data: { label?: string; value?: number } }) {
+    const isOn = !!data.value;
 
     return (
-        <div className="bg-white border text-center p-2 rounded shadow-sm min-w-[60px]">
-            {isEditing ? (
-                <input
-                    autoFocus
-                    className="text-xs font-bold mb-1 w-full text-center border-none focus:ring-0 p-0 outline-none"
-                    value={label}
-                    onChange={(e) => setLabel(e.target.value)}
-                    onBlur={handleBlur}
-                    onKeyDown={handleKeyDown}
+        <div className="flex flex-col items-center group relative">
+            {/* Label */}
+            <div className="mb-1 text-[10px] font-bold text-gray-500 uppercase tracking-wider bg-white/80 px-1 rounded backdrop-blur-sm border border-transparent group-hover:border-gray-200 transition-all">
+                {data.label || 'LED'}
+            </div>
+
+            <div className="relative">
+                {/* LED Body */}
+                <div className={`
+                    relative w-12 h-12 rounded-full border-4 transition-all duration-300 flex items-center justify-center shadow-lg
+                    ${isOn ? 'bg-red-500 border-red-600 shadow-[0_0_30px_rgba(239,68,68,0.6)] animate-pulse-slow' : 'bg-red-900 border-gray-700 opacity-80'}
+                `}>
+                    {/* Reflection/Shine */}
+                    <div className="absolute top-2 left-3 w-3 h-2 bg-white rounded-full opacity-40 blur-[1px]"></div>
+
+                    {/* Inner Glow */}
+                    {isOn && <div className="absolute inset-0 rounded-full bg-red-400 blur-md opacity-50"></div>}
+                </div>
+
+                {/* Inputs Handle - Outside Body */}
+                <Handle
+                    type="target"
+                    position={Position.Left}
+                    className="!bg-gray-400 !w-3 !h-3 hover:!bg-blue-500 !border-none transition-colors"
+                    style={{ left: -6, top: '50%', zIndex: 50 }}
                 />
-            ) : (
-                <label
-                    className="block text-xs font-bold mb-1 cursor-text select-none"
-                    onDoubleClick={handleDoubleClick}
-                >
-                    {data.label || 'Output'}
-                </label>
-            )}
-            <div className={`w-8 h-8 rounded-full border-2 mx-auto transition-colors ${isOn ? 'bg-red-500 border-red-700 shadow-[0_0_10px_rgba(239,68,68,0.6)]' : 'bg-gray-200 border-gray-400'
-                }`} />
-            <Handle type="target" position={Position.Left} />
+            </div>
+
+            {/* Base/Legs visualization (Optional decoration) */}
+            <div className="flex gap-1 mt-[-2px] -z-10">
+                <div className="w-1 h-3 bg-gray-400"></div>
+                <div className="w-1 h-3 bg-gray-400"></div>
+            </div>
         </div>
     );
 }

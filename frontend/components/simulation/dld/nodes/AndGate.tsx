@@ -1,14 +1,13 @@
-import { Handle, Position } from '@xyflow/react';
+import React, { memo } from 'react';
+import { NodeProps } from '@xyflow/react';
+import { SimpleLogicGateNode } from './SimpleLogicGateNode';
 
-export default function AndGate() {
-    return (
-        <div className="bg-white border-2 border-black rounded-sm p-4 w-24 h-24 flex items-center justify-center shadow-md relative">
-            <Handle type="target" position={Position.Left} id="a" style={{ top: '30%' }} />
-            <Handle type="target" position={Position.Left} id="b" style={{ top: '70%' }} />
+const AndGate = memo((props: NodeProps) => {
+    // AND Gate Path: Flat back (x=0), curved front. Width 50.
+    // L 30,0 (flat top) -> Arc to 30,40 -> L 0,40
+    const path = "M 0,0 L 30,0 A 20,20 0 0 1 30,40 L 0,40 Z";
+    return <SimpleLogicGateNode {...props} svgPath={path} label="AND" inputs={2} />;
+});
 
-            <div className="font-bold text-xs">AND</div>
-
-            <Handle type="source" position={Position.Right} />
-        </div>
-    );
-}
+AndGate.displayName = 'AndGate';
+export default AndGate;

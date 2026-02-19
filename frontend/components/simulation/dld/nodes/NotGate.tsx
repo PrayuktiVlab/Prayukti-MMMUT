@@ -1,13 +1,12 @@
-import { Handle, Position } from '@xyflow/react';
+import React, { memo } from 'react';
+import { NodeProps } from '@xyflow/react';
+import { SimpleLogicGateNode } from './SimpleLogicGateNode';
 
-export default function NotGate() {
-    return (
-        <div className="bg-white border-2 border-black rounded-tl-full rounded-bl-full p-4 w-16 h-16 flex items-center justify-center shadow-md relative">
-            <Handle type="target" position={Position.Left} />
+const NotGate = memo((props: NodeProps) => {
+    // NOT Gate Path: Triangle. Width 50.
+    const path = "M 0,0 L 50,20 L 0,40 Z";
+    return <SimpleLogicGateNode {...props} svgPath={path} label="NOT" inputs={1} showBubble={true} />;
+});
 
-            <div className="font-bold text-xs">NOT</div>
-
-            <Handle type="source" position={Position.Right} />
-        </div>
-    );
-}
+NotGate.displayName = 'NotGate';
+export default NotGate;
