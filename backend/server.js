@@ -2,39 +2,50 @@ require("dotenv").config();
 
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 
-// Load environment variables
-dotenv.config();
-
 // Connect to Database
-connectDB();
+const startServer = async () => {
+    try {
+        console.log("Attempting to connect to MongoDB...");
+        console.log(`MONGO_URI is defined: ${!!process.env.MONGO_URI}`);
+        if (process.env.MONGO_URI) {
+            console.log(`MONGO_URI starts with: ${process.env.MONGO_URI.substring(0, 15)}...`);
+        }
 
-const app = express();
+        await connectDB();
 
-// Middleware
-// Improved CORS to handle credentials with dynamic origin
-app.use(cors({
-    origin: (origin, callback) => {
-        // Allowing all origins while maintaining compatibility with credentials: true
-        callback(null, true);
-    },
-    credentials: true
-}));
-app.use(express.json());
+        const app = express();
 
-// Routes
-app.use("/api/auth", authRoutes);
+        // Middleware
+        // Improved CORS to handle credentials with dynamic origin
+        app.use(cors({
+            origin: (origin, callback) => {
+                // Allowing all origins while maintaining compatibility with credentials: true
+                callback(null, true);
+            },
+            credentials: true
+        }));
+        app.use(express.json());
 
-// Health check
-app.get("/", (req, res) => {
-    res.json({ message: "Prayukti-vLAB Authentication API is running" });
-});
+        // Routes
+        app.use("/api/auth", authRoutes);
 
-const PORT = process.env.PORT || 5000;
+        // Health check
+        app.get("/", (req, res) => {
+            res.json({ message: "Prayukti-vLAB Authentication API is running" });
+        });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+        const PORT = process.env.PORT || 5000;
+
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error);
+        process.exit(1);
+    }
+};
+
+startServer();
