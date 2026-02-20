@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, PlayCircle, ArrowLeft, Award, CheckCircle2 } from "lucide-react";
 import { getLabsBySubject } from "@/lib/labs/registry";
@@ -16,7 +16,7 @@ import { getStudentName, getSubjectProgress, isSubjectCompleted, getSubjectCompl
 import { Lock } from "lucide-react";
 
 export default function DLDPage() {
-    const labs = getLabsBySubject("DLD");
+    const labs = useMemo(() => getLabsBySubject("DLD"), []);
     const [studentNameStr, setStudentNameStr] = useState("");
     const [progress, setProgress] = useState<{ [key: string]: number }>({});
     const [overallCompletion, setOverallCompletion] = useState(0);

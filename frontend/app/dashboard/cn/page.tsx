@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, PlayCircle, ArrowLeft, Award, CheckCircle2 } from "lucide-react";
@@ -16,7 +16,7 @@ import { getStudentName, getSubjectProgress, isSubjectCompleted, getSubjectCompl
 import { Lock } from "lucide-react";
 
 export default function CNPage() {
-    const labs = getLabsBySubject("CN");
+    const labs = useMemo(() => getLabsBySubject("CN"), []);
     const [studentNameStr, setStudentNameStr] = useState("");
     const [progress, setProgress] = useState<{ [key: string]: number }>({});
     const [overallCompletion, setOverallCompletion] = useState(0);
