@@ -16,9 +16,6 @@ export default function PracticalDetail({ params }: { params: Promise<{ id: stri
     const { id } = use(params);
     const labId = !isNaN(Number(id)) ? `cn-exp-${id}` : id;
 
-    // Fallback logic if needed, but registry uses full IDs
-    const labId = !isNaN(Number(id)) ? `cn-exp-${id}` : id;
-
     const lab = getLabById(labId);
     const content = LAB_CONTENT[labId];
 

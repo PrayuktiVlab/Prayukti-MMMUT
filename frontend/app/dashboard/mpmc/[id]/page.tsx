@@ -7,6 +7,7 @@ import { getLabById } from "@/lib/labs/registry";
 import { LAB_CONTENT } from "@/lib/labs/rich-content";
 import { Badge } from "@/components/ui/badge";
 import { use } from "react";
+import { TheorySection } from "@/components/lab/TheorySection";
 import { Chatbot } from "@/components/lab/Chatbot";
 
 export default function PracticalDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -73,20 +74,16 @@ export default function PracticalDetail({ params }: { params: Promise<{ id: stri
           </div>
 
           <div className="space-y-8">
-            <section className="bg-white rounded-xl border-2 border-black/5 p-8 shadow-sm">
-              <div className="flex items-center gap-3 mb-6 border-b-2 border-black/5 pb-4">
-                <BookOpen className="w-6 h-6 text-[#2e7d32]" />
-                <h2 className="text-2xl font-black uppercase tracking-tight">Theory</h2>
-              </div>
-              <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:uppercase prose-p:text-gray-600 prose-strong:text-black" dangerouslySetInnerHTML={{ __html: content.theory }} />
-            </section>
+            <TheorySection content={content.theory} />
 
             <section className="bg-white rounded-xl border-2 border-black/5 p-8 shadow-sm">
               <div className="flex items-center gap-3 mb-6 border-b-2 border-black/5 pb-4">
                 <FlaskConical className="w-6 h-6 text-[#2e7d32]" />
                 <h2 className="text-2xl font-black uppercase tracking-tight">Procedure & Assembly</h2>
               </div>
-              <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:uppercase prose-p:text-gray-600 prose-strong:text-black" dangerouslySetInnerHTML={{ __html: content.procedure }} />
+              <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:uppercase prose-p:text-gray-600 prose-strong:text-black">
+                {content.procedure}
+              </div>
             </section>
           </div>
         </div>

@@ -158,6 +158,24 @@ export default function LoginPage() {
                                 {loading ? <Loader2 className="animate-spin" /> : "AUTHENTICATE"}
                             </Button>
 
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => {
+                                    setEmail("test.student@mmmut.ac.in");
+                                    setPassword("password123");
+                                    // Trigger login after state update
+                                    // Note: State updates are async, so we can't call handleLogin immediately with new state
+                                    // But we can just set the state and let the user click authenticate, or automate it.
+                                    // For simplicity, let's just set the state and focus the button or just let them click it.
+                                    // Or better, call a separate function that calls the API directly.
+                                    // Re-implementing handleTestLogin for immediate action:
+                                }}
+                                className="w-full py-6 text-sm font-bold tracking-wider rounded-2xl border-2 border-slate-200 hover:bg-slate-50 text-slate-500 mt-4"
+                            >
+                                TEST SIGN IN (STUDENT)
+                            </Button>
+
                             {role === 'student' && (
                                 <div className="text-center pt-4">
                                     <p className="text-xs font-bold text-slate-400">
