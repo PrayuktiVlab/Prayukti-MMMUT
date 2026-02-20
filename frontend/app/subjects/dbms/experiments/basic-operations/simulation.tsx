@@ -100,8 +100,8 @@ export default function Simulation() {
                         onClick={() => setShowCreateDBModal(true)}
                         disabled={!!database}
                         className={`w-full flex items-center justify-between p-3 rounded-lg border text-left transition-all ${!!database
-                                ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
-                                : "bg-white text-gray-700 border-gray-300 hover:border-[#2ecc71] hover:text-[#2ecc71] shadow-sm active:scale-95"
+                            ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                            : "bg-white text-gray-700 border-gray-300 hover:border-[#2ecc71] hover:text-[#2ecc71] shadow-sm active:scale-95"
                             }`}
                     >
                         <span className="font-medium">Create Database</span>
@@ -112,8 +112,8 @@ export default function Simulation() {
                         onClick={() => setShowCreateTableModal(true)}
                         disabled={!database}
                         className={`w-full flex items-center justify-between p-3 rounded-lg border text-left transition-all ${!database
-                                ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
-                                : "bg-white text-gray-700 border-gray-300 hover:border-[#2ecc71] hover:text-[#2ecc71] shadow-sm active:scale-95"
+                            ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                            : "bg-white text-gray-700 border-gray-300 hover:border-[#2ecc71] hover:text-[#2ecc71] shadow-sm active:scale-95"
                             }`}
                     >
                         <span className="font-medium">Create Table</span>

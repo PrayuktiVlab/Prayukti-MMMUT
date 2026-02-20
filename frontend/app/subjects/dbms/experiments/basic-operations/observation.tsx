@@ -55,8 +55,8 @@ export default function Observation() {
                                 <label
                                     key={option}
                                     className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${answers[q.id] === option
-                                            ? "bg-blue-50 border-blue-500 text-blue-700"
-                                            : "hover:bg-gray-50 border-gray-200"
+                                        ? "bg-blue-50 border-blue-500 text-blue-700"
+                                        : "hover:bg-gray-50 border-gray-200"
                                         } ${submitted && option === q.correct ? "bg-green-50 border-green-500 !text-green-700 font-bold" : ""} ${submitted && answers[q.id] === option && option !== q.correct ? "bg-red-50 border-red-500 text-red-700" : ""}`}
                                 >
                                     <input
