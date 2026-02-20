@@ -157,7 +157,7 @@ const Labs: LabManifest[] = [
         type: "experimental",
         metadata: {
             title: "Study and Verification of Logic Gates",
-            description: "Master the fundamentals of digital electronics, logic gates, and circuit design.",
+            description: "Study of basic logic gates (AND, OR, NOT, NAND, NOR, XOR, XNOR).",
             difficulty: "Easy",
             thumbnailUrl: "⚡"
         }
@@ -167,8 +167,8 @@ const Labs: LabManifest[] = [
         subject: "DLD",
         type: "experimental",
         metadata: {
-            title: "Design and Implementation of Half Adder and Full Adder",
-            description: "Construct combinational circuits to perform addition.",
+            title: "Half Adder and Full Adder",
+            description: "Design and verification of Half Adder and Full Adder circuits.",
             difficulty: "Medium",
             thumbnailUrl: "⚡"
         }
@@ -178,8 +178,8 @@ const Labs: LabManifest[] = [
         subject: "DLD",
         type: "experimental",
         metadata: {
-            title: "Design and Implementation of Half Subtractor and Full Subtractor",
-            description: "Construct combinational circuits to perform subtraction.",
+            title: "Half Subtractor and Full Subtractor",
+            description: "Design and verification of Half Subtractor and Full Subtractor circuits.",
             difficulty: "Medium",
             thumbnailUrl: "⚡"
         }
@@ -189,8 +189,74 @@ const Labs: LabManifest[] = [
         subject: "DLD",
         type: "experimental",
         metadata: {
-            title: "Design of 4-bit Binary to Gray Code Converter",
-            description: "Learn code conversion techniques using logic gates.",
+            title: "Code Conversion (Binary to Gray & Gray to Binary)",
+            description: "Design 4-bit Binary to Gray and Gray to Binary code converters.",
+            difficulty: "Hard",
+            thumbnailUrl: "⚡"
+        }
+    },
+    {
+        id: "dld-exp-5",
+        subject: "DLD",
+        type: "experimental",
+        metadata: {
+            title: "Combinational Logic Design (SOP & POS)",
+            description: "Design and verify combinational logic in SOP and POS forms.",
+            difficulty: "Medium",
+            thumbnailUrl: "⚡"
+        }
+    },
+    {
+        id: "dld-exp-6",
+        subject: "DLD",
+        type: "experimental",
+        metadata: {
+            title: "Decoder and Encoder Circuits",
+            description: "Realization of 2:4 Decoder and 4:2 Encoder circuits.",
+            difficulty: "Medium",
+            thumbnailUrl: "⚡"
+        }
+    },
+    {
+        id: "dld-exp-7",
+        subject: "DLD",
+        type: "experimental",
+        metadata: {
+            title: "Multiplexer and Demultiplexer",
+            description: "Design and verify 4:1 Multiplexer and 1:4 Demultiplexer.",
+            difficulty: "Medium",
+            thumbnailUrl: "⚡"
+        }
+    },
+    {
+        id: "dld-exp-8",
+        subject: "DLD",
+        type: "experimental",
+        metadata: {
+            title: "Comparators (1-bit & 4-bit)",
+            description: "Design 1-bit comparator and study 4-bit comparator (IC 7485).",
+            difficulty: "Medium",
+            thumbnailUrl: "⚡"
+        }
+    },
+    {
+        id: "dld-exp-9",
+        subject: "DLD",
+        type: "experimental",
+        metadata: {
+            title: "Flip-Flops and Shift Registers",
+            description: "Verify SR, D, JK, T Flip-Flops and Shift Registers (SISO, SIPO, PISO, PIPO).",
+            difficulty: "Hard",
+            thumbnailUrl: "⚡"
+        }
+    },
+    {
+        id: "dld-exp-10",
+        subject: "DLD",
+        type: "experimental",
+        metadata: {
+            title: "Synchronous and Asynchronous Counters",
+            description: "Design and verify Asynchronous (Mod-n) and Synchronous counters.",
             difficulty: "Hard",
             thumbnailUrl: "⚡"
         }

@@ -1,14 +1,12 @@
-import { Handle, Position } from '@xyflow/react';
+import React, { memo } from 'react';
+import { NodeProps } from '@xyflow/react';
+import { SimpleLogicGateNode } from './SimpleLogicGateNode';
 
-export default function OrGate() {
-    return (
-        <div className="bg-white border-2 border-black rounded-lg p-4 w-24 h-24 flex items-center justify-center shadow-md relative">
-            <Handle type="target" position={Position.Left} id="a" style={{ top: '30%' }} />
-            <Handle type="target" position={Position.Left} id="b" style={{ top: '70%' }} />
+const OrGate = memo((props: NodeProps) => {
+    // OR Gate Path: Curved back, pointed front. Width 50.
+    const path = "M 0,0 Q 30,0 50,20 Q 30,40 0,40 Q 15,20 0,0 Z";
+    return <SimpleLogicGateNode {...props} svgPath={path} label="OR" inputs={2} />;
+});
 
-            <div className="font-bold text-xs">OR</div>
-
-            <Handle type="source" position={Position.Right} />
-        </div>
-    );
-}
+OrGate.displayName = 'OrGate';
+export default OrGate;

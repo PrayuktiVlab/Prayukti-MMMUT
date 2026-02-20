@@ -1,12 +1,12 @@
-import { Handle, Position } from '@xyflow/react';
+import React, { memo } from 'react';
+import { NodeProps } from '@xyflow/react';
+import { SimpleLogicGateNode } from './SimpleLogicGateNode';
 
-export default function XnorGate() {
-    return (
-        <div className="bg-white border-2 border-black rounded-lg w-16 h-16 flex items-center justify-center relative shadow-sm">
-            <div className="text-xs font-bold">XNOR</div>
-            <Handle type="target" position={Position.Left} id="a" style={{ top: '30%' }} />
-            <Handle type="target" position={Position.Left} id="b" style={{ top: '70%' }} />
-            <Handle type="source" position={Position.Right} />
-        </div>
-    );
-}
+const XnorGate = memo((props: NodeProps) => {
+    // XNOR Gate Path (Same as XOR)
+    const path = "M -5,0 Q 5,20 -5,40 M 5,0 Q 35,0 50,20 Q 35,40 5,40 Q 20,20 5,0 Z";
+    return <SimpleLogicGateNode {...props} svgPath={path} label="XNOR" inputs={2} showBubble={true} />;
+});
+
+XnorGate.displayName = 'XnorGate';
+export default XnorGate;
