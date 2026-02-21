@@ -1,6 +1,16 @@
 const path = require('path');
 require("dotenv").config({ path: path.resolve(__dirname, '.env') });
 
+// Automatically load and strip BACKEND_ prefix from environment variables
+// This allows turborepo deployments (like Render) to pass backend-specific ENV vars
+Object.keys(process.env).forEach(key => {
+    if (key.startsWith('BACKEND_')) {
+        const strippedKey = key.replace(/^BACKEND_/, '');
+        process.env[strippedKey] = process.env[key];
+        delete process.env[key];
+    }
+});
+
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
