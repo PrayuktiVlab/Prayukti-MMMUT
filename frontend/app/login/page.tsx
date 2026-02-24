@@ -163,9 +163,17 @@ export default function LoginPage() {
                                 variant="outline"
                                 onClick={async (e) => {
                                     e.preventDefault();
-                                    setEmail("test.student@mmmut.ac.in");
+
+                                    const testEmail = role === 'student' ? "test.student@mmmut.ac.in" :
+                                        role === 'teacher' ? "test.faculty@mmmut.ac.in" :
+                                            "test.admin@mmmut.ac.in";
+
+                                    const testName = role === 'student' ? "Test Student" :
+                                        role === 'teacher' ? "Test Faculty" :
+                                            "Test Admin";
+
+                                    setEmail(testEmail);
                                     setPassword("password123");
-                                    setRole("student");
 
                                     // Bypass backend and simulate a successful login
                                     setError("");
@@ -176,23 +184,25 @@ export default function LoginPage() {
 
                                     if (typeof window !== 'undefined') {
                                         // Set a mock token and user data
-                                        localStorage.setItem("token", "mock_jwt_token_for_testing_12345");
+                                        localStorage.setItem("token", `mock_jwt_token_for_${role}_12345`);
                                         localStorage.setItem("user", JSON.stringify({
-                                            id: "mock_user_id_001",
-                                            fullName: "Test Student",
-                                            email: "test.student@mmmut.ac.in",
-                                            role: "student"
+                                            id: `mock_${role}_id_001`,
+                                            fullName: testName,
+                                            email: testEmail,
+                                            role: role
                                         }));
                                     }
 
                                     setSuccess(true);
                                     setTimeout(() => {
-                                        router.push("/dashboard");
+                                        if (role === 'teacher') router.push("/dashboard/teacher");
+                                        else if (role === 'admin') router.push("/dashboard/admin");
+                                        else router.push("/dashboard");
                                     }, 1000);
                                 }}
                                 className="w-full py-6 text-sm font-bold tracking-wider rounded-2xl border-2 border-slate-200 hover:bg-slate-50 text-slate-500 mt-4"
                             >
-                                TEST SIGN IN (STUDENT)
+                                TEST SIGN IN ({role.toUpperCase()})
                             </Button>
 
                             {role === 'student' && (
