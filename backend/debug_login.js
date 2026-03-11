@@ -7,7 +7,7 @@ const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/vlab";
 async function checkUser() {
     try {
         await mongoose.connect(MONGO_URI);
-        const email = "2024022018@mmmut.ac.in";
+        const email = process.argv[2] || "2023021260@mmmut.ac.in";
         const user = await User.findOne({ email });
 
         if (user) {

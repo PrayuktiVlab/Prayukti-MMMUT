@@ -48,6 +48,10 @@ export const MonacoEditor: React.FC<MonacoEditorProps> = ({
                     smoothScrolling: true,
                     tabSize: 4,
                     renderLineHighlight: "all",
+                    overviewRulerBorder: false,
+                    lineNumbers: "on",
+                    glyphMargin: false,
+                    folding: true,
                     scrollbar: {
                         vertical: "visible",
                         horizontal: "visible",

@@ -61,10 +61,10 @@ exports.seedExperiments = async (req, res) => {
                 title: "Reverse an Array",
                 theory: "Reversing an array involves swapping elements from both ends moving towards the center.",
                 algorithm: "1. Start\n2. Use two pointers: start=0, end=n-1\n3. Swap arr[start] and arr[end]\n4. Increment start, decrement end\n5. Repeat until start >= end",
-                codeTemplate: "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    std::vector<int> arr = {1, 2, 3, 4, 5};\n    std::reverse(arr.begin(), arr.end());\n    for(int x : arr) std::cout << x << \" \";\n    return 0;\n}",
+                codeTemplate: "#include <iostream>\n#include <vector>\n\n// TODO: Implement the reverseArray function\nvoid reverseArray(std::vector<int>& arr) {\n    // Your code here\n}\n\nint main() {\n    std::vector<int> arr = {1, 2, 3, 4, 5};\n    \n    std::cout << \"Original: \";\n    for(int x : arr) std::cout << x << \" \";\n    \n    reverseArray(arr);\n    \n    std::cout << \"\\nReversed: \";\n    for(int x : arr) std::cout << x << \" \";\n    \n    return 0;\n}",
                 language: "cpp",
                 testcases: [
-                    { input: "", output: "5 4 3 2 1 " }
+                    { input: "", output: "Original: 1 2 3 4 5 \nReversed: 5 4 3 2 1 " }
                 ]
             },
             {
@@ -72,11 +72,8 @@ exports.seedExperiments = async (req, res) => {
                 title: "Binary Search Implementation",
                 theory: "Binary search targets a sorted array and repeatedly divides the search interval in half.",
                 algorithm: "1. Set low=0, high=n-1\n2. Find mid = (low+high)/2\n3. If target == mid, return\n4. If target < mid, high=mid-1\n5. Else low=mid+1",
-                codeTemplate: "#include <iostream>\n#include <vector>\n\nint binarySearch(std::vector<int>& arr, int target) {\n    int low = 0, high = arr.size() - 1;\n    while(low <= high) {\n        int mid = low + (high-low)/2;\n        if(arr[mid] == target) return mid;\n        if(arr[mid] < target) low = mid + 1;\n        else high = mid - 1;\n    }\n    return -1;\n}\n\nint main() {\n    std::vector<int> arr = {1, 2, 3, 4, 5};\n    std::cout << \"Index of 4: \" << binarySearch(arr, 4);\n    return 0;\n}",
-                language: "cpp",
-                testcases: [
-                    { input: "", output: "Index of 4: 3" }
-                ]
+                codeTemplate: "#include <iostream>\n#include <vector>\n\n/**\n * @return index of target or -1 if not found\n */\nint binarySearch(std::vector<int>& arr, int target) {\n    // TODO: Implement binary search logic\n    return -1;\n}\n\nint main() {\n    std::vector<int> arr = {10, 20, 30, 40, 50};\n    int target = 40;\n    \n    int index = binarySearch(arr, target);\n    \n    if(index != -1)\n        std::cout << \"Target \" << target << \" found at index: \" << index;\n    else\n        std::cout << \"Target not found\";\n        \n    return 0;\n}",
+                language: "cpp"
             },
             // --- C PROGRAMMING ---
             {
@@ -84,7 +81,15 @@ exports.seedExperiments = async (req, res) => {
                 title: "Sum of Natural Numbers",
                 theory: "Calculate the sum of first N natural numbers using a loop.",
                 algorithm: "1. Start\n2. Input N\n3. Initialize sum = 0\n4. For i from 1 to N, sum = sum + i\n5. Print sum",
-                codeTemplate: "#include <stdio.h>\n\nint main() {\n    int n = 10, sum = 0;\n    for(int i=1; i<=n; i++) sum += i;\n    printf(\"Sum of first %d natural numbers is %d\", n, sum);\n    return 0;\n}",
+                codeTemplate: "#include <stdio.h>\n\n/**\n * @return sum of first n natural numbers\n */\nint calculateSum(int n) {\n    // Your code here\n    return 0;\n}\n\nint main() {\n    int n = 10;\n    int sum = calculateSum(n);\n    \n    printf(\"Sum of first %d natural numbers is %d\\n\", n, sum);\n    return 0;\n}",
+                language: "c"
+            },
+            {
+                subjectId: findId("C Programming"),
+                title: "Factorial of a Number",
+                theory: "The factorial of a non-negative integer n is the product of all positive integers less than or equal to n.",
+                algorithm: "1. Start\n2. If n=0 or n=1 return 1\n3. Else return n * factorial(n-1)",
+                codeTemplate: "#include <stdio.h>\n\n// Recursive function to find factorial\nlong factorial(int n) {\n    // TODO: Implement recursion\n    return 0;\n}\n\nint main() {\n    int num = 5;\n    printf(\"Factorial of %d is %ld\\n\", num, factorial(num));\n    return 0;\n}",
                 language: "c"
             },
             // --- COMPUTER NETWORKS ---
