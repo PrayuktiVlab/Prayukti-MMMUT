@@ -31,31 +31,54 @@ export function AddTeacherDialog({ open, onOpenChange, onAddTeacher }: AddTeache
     const [subject, setSubject] = useState("Computer Networks");
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        // Simulate API call
-        setTimeout(() => {
+        // Call API
+        try {
+            const res = await fetch("http://localhost:5000/api/users", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    fullName: name,
+                    email,
+                    password: "password123", // Default password for new users
+                    role: "teacher",
+                    employeeId,
+                    subject
+                })
+            });
+
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.message || "Failed to add teacher");
+            }
+
+            const savedTeacher = await res.json();
+
+            // Format to match frontend needs
             const newTeacher: Teacher = {
-                id: `teach-${Date.now()}`,
-                name,
-                email,
+                id: savedTeacher._id,
+                name: savedTeacher.fullName,
+                email: savedTeacher.email,
                 employeeId,
                 subject,
                 status: 'Active',
-                joinedDate: new Date().toISOString()
+                joinedDate: savedTeacher.createdAt || new Date().toISOString()
             };
 
             onAddTeacher(newTeacher);
-            setLoading(false);
             onOpenChange(false);
-
-            // Reset form
             setName("");
             setEmail("");
             setEmployeeId("");
-        }, 1000);
+        } catch (err: any) {
+            console.error(err);
+            alert(err.message || "An error occurred");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

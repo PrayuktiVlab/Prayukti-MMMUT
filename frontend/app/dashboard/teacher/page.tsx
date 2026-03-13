@@ -44,12 +44,37 @@ export default function TeacherDashboard() {
     const [data, setData] = useState<StudentMetric[]>([]);
     const [isClient, setIsClient] = useState(false);
 
-    const loadData = () => {
-        const storedData = localStorage.getItem('vlab_students');
-        if (storedData) {
-            setData(JSON.parse(storedData));
-        } else {
-            setData(MOCK_TEACHER_DATA);
+    const loadData = async () => {
+        try {
+            const res = await fetch("http://localhost:5000/api/users");
+            if (!res.ok) throw new Error("Failed to fetch users");
+            const allUsers = await res.json();
+
+            // Only keep students
+            const fetchedStudents = allUsers
+                .filter((u: any) => u.role === 'student')
+                .map((u: any) => ({
+                    id: u._id,
+                    name: u.fullName,
+                    email: u.email,
+                    rollNo: u.rollNo || "N/A",
+                    subject: u.subject || "Computer Networks",
+                    practicalsAssigned: 10,
+                    practicalsCompleted: 0,
+                    quizScoreAvg: 0,
+                    avgAttempts: 0,
+                    totalTimeSpent: 0,
+                    lastActive: u.createdAt || new Date().toISOString(),
+                    status: 'Average' as const,
+                    quizTrend: [],
+                    completedPracticals: [],
+                    weakAreas: []
+                }));
+
+            setData(fetchedStudents);
+        } catch (error) {
+            console.error("Error fetching students:", error);
+            setData([]);
         }
     };
 
@@ -57,17 +82,9 @@ export default function TeacherDashboard() {
         loadData();
         setIsClient(true);
 
-        const handleStorageChange = (e: StorageEvent) => {
-            if (e.key === 'vlab_students') {
-                loadData();
-            }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
         window.addEventListener('vlab_students_updated', loadData);
 
         return () => {
-            window.removeEventListener('storage', handleStorageChange);
             window.removeEventListener('vlab_students_updated', loadData);
         };
     }, []);

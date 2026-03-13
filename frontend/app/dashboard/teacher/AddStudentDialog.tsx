@@ -22,16 +22,37 @@ export function AddStudentDialog({ open, onOpenChange, onAddStudent }: AddStuden
     const [subject, setSubject] = useState("Computer Networks");
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        // Simulate API call
-        setTimeout(() => {
+        // Call API
+        try {
+            const res = await fetch("http://localhost:5000/api/users", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    fullName: name,
+                    email,
+                    password: "password123", // Default password for new users
+                    role: "student",
+                    rollNo,
+                    subject
+                })
+            });
+
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.message || "Failed to add student");
+            }
+
+            const savedStudent = await res.json();
+
+            // Format to match frontend
             const newStudent = {
-                id: `stu-${Date.now()}`,
-                name,
-                email,
+                id: savedStudent._id,
+                name: savedStudent.fullName,
+                email: savedStudent.email,
                 rollNo,
                 subject,
                 practicalsAssigned: 10,
@@ -39,22 +60,24 @@ export function AddStudentDialog({ open, onOpenChange, onAddStudent }: AddStuden
                 quizScoreAvg: 0,
                 avgAttempts: 0,
                 totalTimeSpent: 0,
-                lastActive: new Date().toISOString(),
-                status: 'Average' as const, // Default status
+                lastActive: savedStudent.createdAt || new Date().toISOString(),
+                status: 'Average' as const,
                 quizTrend: [],
                 completedPracticals: [],
                 weakAreas: []
             };
 
             onAddStudent(newStudent);
-            setLoading(false);
             onOpenChange(false);
-
-            // Reset form
             setName("");
             setEmail("");
             setRollNo("");
-        }, 1000);
+        } catch (err: any) {
+            console.error(err);
+            alert(err.message || "An error occurred");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

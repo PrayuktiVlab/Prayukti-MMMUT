@@ -67,6 +67,9 @@ const startServer = async () => {
 
         const app = express();
 
+        const authRoutes = require('./routes/auth');
+        const userRoutes = require('./routes/userRoutes');
+
         // Middleware
         // Improved CORS to handle credentials with dynamic origin
         app.use(cors({
@@ -83,6 +86,7 @@ const startServer = async () => {
         app.use("/api/subjects", subjectRoutes);
         app.use("/api/experiments", experimentRoutes);
         app.use("/api/code", codeRoutes);
+        app.use("/api/users", userRoutes);
 
         // Health check
         app.get("/", (req, res) => {
