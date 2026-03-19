@@ -8,6 +8,7 @@ import { RoleGuard } from "@/lib/auth/withRole";
 import { Card, CardContent } from "@/components/ui/card";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import RiskBadge from "@/components/attendance/RiskBadge";
 import axios from "axios";
 import {
     Globe,
@@ -18,10 +19,11 @@ import {
     FlaskConical,
     Loader2,
     AlertCircle,
-    ArrowRight
+    ArrowRight,
+    LogOut
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 interface Subject {
     _id: string;
@@ -87,6 +89,29 @@ export default function Dashboard() {
         }
     };
 
+    const handleLogout = async () => {
+        try {
+            const token = localStorage.getItem('vlab_token');
+            await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/attendance/logout`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            console.log('[LOGOUT] attendance recorded');
+        } catch (err) {
+            console.error('[LOGOUT] attendance API failed:', err);
+        } finally {
+            localStorage.removeItem('vlab_token');
+            localStorage.removeItem('vlab_user');
+            router.push('/login');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-500">
             <Navbar />
@@ -99,21 +124,32 @@ export default function Dashboard() {
                             <span className="w-3 h-3 rounded-full bg-blue-600 animate-pulse" />
                             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">User Session Active</p>
                         </div>
-                        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900 dark:text-white leading-none">
+                        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900 dark:text-white leading-none flex flex-wrap items-center gap-4">
                             My <span className="text-blue-600 italic">Dashboard</span>
+                            <RiskBadge />
                         </h2>
                         <p className="text-lg text-slate-500 dark:text-slate-400 font-medium mt-4 max-w-xl">
                             Select a virtual laboratory module to begin your experimental session.
                         </p>
                     </div>
 
-                    <RoleGuard allowedRoles={["ADMIN"]}>
-                        <Link href="/admin/lab-designer">
-                            <Button className="h-14 px-8 uppercase font-black tracking-widest bg-slate-900 dark:bg-white dark:text-slate-900 text-white hover:bg-black dark:hover:bg-slate-200 rounded-2xl shadow-xl shadow-slate-200 dark:shadow-none transition-transform active:scale-95">
-                                + Create New Lab
-                            </Button>
-                        </Link>
-                    </RoleGuard>
+                    <div className="flex items-center gap-3">
+                        <RoleGuard allowedRoles={["ADMIN"]}>
+                            <Link href="/admin/lab-designer">
+                                <Button className="h-14 px-8 uppercase font-black tracking-widest bg-slate-900 dark:bg-white dark:text-slate-900 text-white hover:bg-black dark:hover:bg-slate-200 rounded-2xl shadow-xl shadow-slate-200 dark:shadow-none transition-transform active:scale-95">
+                                    + Create New Lab
+                                </Button>
+                            </Link>
+                        </RoleGuard>
+                        <Button
+                            variant="ghost"
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 h-14 px-6 rounded-2xl font-bold uppercase tracking-widest text-xs border border-red-100 dark:border-red-900/30"
+                        >
+                            <LogOut size={16} />
+                            Logout
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Subjects Grid */}
@@ -174,14 +210,19 @@ export default function Dashboard() {
 
                 {/* Analytics / Status Sections */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-20">
-                    <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 flex flex-col items-center justify-center text-center border-2 border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 flex flex-col items-center justify-center text-center border-2 border-slate-100 dark:border-slate-800 shadow-sm transition-all hover:shadow-lg">
                         <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6 text-blue-600">
                             <span className="text-2xl font-black italic">!</span>
                         </div>
                         <h3 className="text-2xl font-black uppercase tracking-tight mb-3 text-slate-900 dark:text-white">System Status</h3>
-                        <p className="text-slate-500 dark:text-slate-400 font-medium max-w-sm leading-relaxed">
+                        <p className="text-slate-500 dark:text-slate-400 font-medium max-w-sm leading-relaxed mb-6">
                             Simulation clusters are fully operational. Optimal performance detected across all node regions.
                         </p>
+                        <div className="w-full pt-6 border-t border-slate-100 dark:border-slate-800">
+                            <Link href="/dashboard/attendance" className="text-xs font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 flex items-center justify-center gap-2 group">
+                                View My Detailed Attendance <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </div>
                     </div>
 
                     <RoleGuard allowedRoles={["TEACHER", "ADMIN"]}>

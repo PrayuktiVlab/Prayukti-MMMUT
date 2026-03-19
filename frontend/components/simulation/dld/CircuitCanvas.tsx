@@ -9,7 +9,7 @@ import { WorkspacesPanel } from '../core/WorkspacesPanel';
 import { Table, Play, Pause, Save, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 
 // Use environment variable for API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 import AndGate from './nodes/AndGate';
 import OrGate from './nodes/OrGate';

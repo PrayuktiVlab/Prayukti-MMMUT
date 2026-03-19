@@ -52,7 +52,8 @@ export default function AdminDashboard() {
 
     const fetchUsers = async () => {
         try {
-            const res = await fetch("http://localhost:5000/api/users");
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+            const res = await fetch(`${baseUrl}/api/users`);
             if (!res.ok) throw new Error("Failed to fetch users");
             const allUsers = await res.json();
 
@@ -125,7 +126,8 @@ export default function AdminDashboard() {
     const handleDeleteStudent = async (id: string, name: string) => {
         if (confirm(`Are you sure you want to delete ${name}? This action cannot be undone.`)) {
             try {
-                const res = await fetch(`http://localhost:5000/api/users/${id}`, {
+                const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+                const res = await fetch(`${baseUrl}/api/users/${id}`, {
                     method: 'DELETE'
                 });
                 if (!res.ok) throw new Error("Failed to delete user");
@@ -144,7 +146,21 @@ export default function AdminDashboard() {
         setSelectedStudent(student);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            const token = localStorage.getItem('vlab_token');
+            if (token) {
+                await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/attendance/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }
+        } catch (err) {
+            console.error("Logout log failed:", err);
+        }
         localStorage.removeItem('vlab_user');
         localStorage.removeItem('vlab_token');
         router.push('/login');

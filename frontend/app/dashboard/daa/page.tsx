@@ -9,22 +9,25 @@ import { Badge } from "@/components/ui/badge";
 import { Chatbot } from "@/components/lab/Chatbot";
 import Footer from "@/components/layout/Footer";
 import { Progress } from "@/components/ui/progress";
-import { getStudentName, getSubjectProgress, isSubjectCompleted, getSubjectCompletionRate } from "@/lib/progress-utils";
+import { getStudentName, getStudentRollNo, getSubjectProgress, isSubjectCompleted, getSubjectCompletionRate } from "@/lib/progress-utils";
 import { generateCertificate } from "@/lib/certificate";
 
 export default function DAAPage() {
     const labs = useMemo(() => getLabsBySubject("DAA"), []);
     const [studentNameStr, setStudentNameStr] = useState("");
+    const [studentRollStr, setStudentRollStr] = useState("");
     const [progress, setProgress] = useState<{ [key: string]: number }>({});
     const [overallCompletion, setOverallCompletion] = useState(0);
     const [isFullyCompleted, setIsFullyCompleted] = useState(false);
 
     useEffect(() => {
         const studentName = getStudentName();
+        const studentRoll = getStudentRollNo();
         const subjectProgress = getSubjectProgress("daa");
         const labIds = labs.map(p => p.id);
 
         setStudentNameStr(studentName);
+        setStudentRollStr(studentRoll);
         setProgress(subjectProgress);
         setOverallCompletion(getSubjectCompletionRate("daa", labIds));
         setIsFullyCompleted(isSubjectCompleted("daa", labIds));
@@ -35,7 +38,7 @@ export default function DAAPage() {
             alert("Student name is missing. Please log out and enter your name during login to generate the certificate.");
             return;
         }
-        await generateCertificate(studentNameStr, "Design and Analysis of Algorithms", true);
+        await generateCertificate(studentNameStr, "Design and Analysis of Algorithms", true, studentRollStr);
     };
 
     return (
@@ -50,7 +53,10 @@ export default function DAAPage() {
                     <div className="h-4 w-[2px] bg-black/10"></div>
                     <span className="text-sm font-bold uppercase tracking-wider text-gray-400">Department</span>
                     <ChevronRight className="h-4 w-4 text-gray-300" />
-                    <h1 className="text-lg font-bold uppercase tracking-tight">Design and Analysis of Algorithms</h1>
+                    <div className="flex-1">
+                        <h1 className="text-lg font-bold uppercase tracking-tight leading-tight">{studentNameStr || "Student Name"}</h1>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{studentRollStr || "Roll Number Not Set"}</p>
+                    </div>
                 </div>
             </header>
 
