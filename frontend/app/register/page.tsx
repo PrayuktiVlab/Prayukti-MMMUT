@@ -11,10 +11,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 export default function RegisterPage() {
     const [fullName, setFullName] = useState("");
+    const [rollNo, setRollNo] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -35,6 +36,7 @@ export default function RegisterPage() {
         try {
             await axios.post(`${API_URL}/api/auth/register`, {
                 fullName,
+                rollNo,
                 email,
                 password
             });
@@ -78,6 +80,21 @@ export default function RegisterPage() {
                                     className="h-14 pl-12 rounded-xl bg-slate-50 border-transparent focus:border-orange-500 focus:bg-white transition-all font-medium"
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
+                                    required
+                                />
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="rollNo" className="text-xs font-black uppercase tracking-widest text-slate-400">University Roll Number</Label>
+                            <div className="relative">
+                                <Input
+                                    id="rollNo"
+                                    placeholder="Enter your university roll no."
+                                    className="h-14 pl-12 rounded-xl bg-slate-50 border-transparent focus:border-orange-500 focus:bg-white transition-all font-medium"
+                                    value={rollNo}
+                                    onChange={(e) => setRollNo(e.target.value)}
                                     required
                                 />
                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />

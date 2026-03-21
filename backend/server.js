@@ -87,6 +87,7 @@ const startServer = async () => {
         app.use("/api/experiments", experimentRoutes);
         app.use("/api/code", codeRoutes);
         app.use("/api/users", userRoutes);
+        app.use('/api/attendance', require('./routes/attendance'));
 
         // Health check
         app.get("/", (req, res) => {

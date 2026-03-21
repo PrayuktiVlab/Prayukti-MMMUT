@@ -23,7 +23,7 @@ const isAllowedDomain = (email) => {
 
 exports.signupUser = async (req, res) => {
     try {
-        const { fullName, email, password } = req.body;
+        const { fullName, email, password, rollNo } = req.body;
         console.log(`[AUTH] Registration attempt: ${email}`);
 
         if (!isAllowedDomain(email)) {
@@ -36,7 +36,7 @@ exports.signupUser = async (req, res) => {
 
         if (user && user.isVerified) {
             console.log(`[AUTH] User already verified: ${email}`);
-            return res.status(400).json({ message: "Student already registered" });
+            return res.status(400).json({ message: "User already registered" });
         }
 
         const otp = generateOtp();
@@ -48,6 +48,7 @@ exports.signupUser = async (req, res) => {
         if (user) {
             console.log(`[AUTH] Updating unverified user: ${email}`);
             user.fullName = fullName;
+            user.rollNo = rollNo;
             user.password = hashedPassword;
             user.otp = otp;
             user.otpExpiry = otpExpiry;
@@ -56,6 +57,7 @@ exports.signupUser = async (req, res) => {
             console.log(`[AUTH] Creating new user: ${email}`);
             user = new User({
                 fullName: fullName,
+                rollNo: rollNo,
                 email: email,
                 password: hashedPassword,
                 otp: otp,
@@ -94,7 +96,7 @@ exports.verifyOtp = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(404).json({ message: "Student not registered" });
+            return res.status(404).json({ message: "User not registered" });
         }
 
         if (user.otp !== otp) {
@@ -117,7 +119,7 @@ exports.verifyOtp = async (req, res) => {
     }
 };
 
-exports.signinUser = async (req, res) => {
+exports.signinUser = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         console.log(`[AUTH] Login attempt: ${email}`);
@@ -126,7 +128,7 @@ exports.signinUser = async (req, res) => {
 
         if (!user) {
             console.log(`[AUTH] User not found: ${email}`);
-            return res.status(404).json({ message: "Student not registered" });
+            return res.status(404).json({ message: "User not registered" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -140,28 +142,48 @@ exports.signinUser = async (req, res) => {
             return res.status(401).json({ message: "Your account is not verified" });
         }
 
-        // Generate JWT
+        // Set data for middleware
+        res.locals.userId = user._id;
+        res.locals.userRole = user.role;
+        res.locals.userEmail = user.email;
+        res.locals.userFullName = user.fullName;
+        res.locals.userRollNo = user.rollNo;
+
+        // Pass to attendanceMiddleware.onLogin
+        next();
+    } catch (err) {
+        console.error("[AUTH] Signin CRASH:", err);
+        res.status(500).json({ message: "Server error during login" });
+    }
+};
+
+/**
+ * Send final signin response after middleware sequence
+ */
+exports.sendSigninResponse = (req, res) => {
+    try {
+        const { userId, userEmail, userRole, userFullName, userRollNo, attendance_log_id } = res.locals;
+
         const token = jwt.sign(
-            { id: user._id, email: user.email, role: user.role },
+            { id: userId, email: userEmail, role: userRole, attendance_log_id: attendance_log_id },
             process.env.JWT_SECRET || 'fallback_secret',
             { expiresIn: '24h' }
         );
-
-        console.log(`[AUTH] Login successful: ${email}`);
 
         res.status(200).json({
             message: "Login successful",
             token,
             user: {
-                id: user._id,
-                fullName: user.fullName,
-                email: user.email,
-                role: user.role
+                id: userId,
+                fullName: userFullName,
+                rollNo: userRollNo,
+                email: userEmail,
+                role: userRole
             }
         });
     } catch (err) {
-        console.error("[AUTH] Signin CRASH:", err);
-        res.status(500).json({ message: "Server error during login" });
+        console.error("[AUTH] Signin Response Error:", err);
+        res.status(500).json({ message: "Failed to finalize login response" });
     }
 };
 
@@ -171,7 +193,7 @@ exports.resendOtp = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(404).json({ message: "Student not registered" });
+            return res.status(404).json({ message: "User not registered" });
         }
 
         const otp = generateOtp();
