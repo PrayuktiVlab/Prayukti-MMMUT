@@ -5,65 +5,65 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 222.2 84% 4.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 0 0% 0%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 0%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 262.1 83.3% 57.8%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 0 0% 0%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
 
-    --radius: 0rem;
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 263.4 70% 50.4%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 100%;
-    --input: 0 0% 100%;
-    --ring: 0 0% 100%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
   }
 }
 
@@ -96,4 +96,75 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.btn-interaction {
+  @apply transition-all duration-500 transform active:scale-95 hover:scale-105 hover:-translate-y-1 active:shadow-inner;
+}
+
+.btn-gradient {
+  @apply bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-white hover:to-white hover:text-blue-600 text-white shadow-xl shadow-blue-500/20 hover:shadow-blue-500/40 border border-transparent hover:border-blue-100;
+}
+
+.card-interaction {
+  @apply transition-all duration-300 shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:border-primary/30 border border-transparent;
+}
+
+.link-animate {
+  @apply relative cursor-pointer font-bold;
+}
+
+.link-animate::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-full h-0.5 bg-accent transform scale-x-0 transition-transform duration-300 origin-left;
+}
+
+.link-animate:hover::after {
+  @apply scale-x-100;
+}
+
+.section-shade-soft {
+  @apply bg-slate-50/50 dark:bg-slate-900/20;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }

@@ -1,5 +1,8 @@
+import React from "react";
+import dynamic from "next/dynamic";
+
 // Define strict types for the registry
-export type LabSubject = "DBMS" | "CN" | "OOPS" | "DLD";
+export type LabSubject = "DBMS" | "CN" | "OOPS" | "DLD" | "MPMC" | "C" | "DSA" | "DAA";
 export type LabType = "learning" | "experimental";
 export type LabDifficulty = "Easy" | "Medium" | "Hard";
 
@@ -22,6 +25,54 @@ export interface LabManifest {
 
 // Unified Registry Data
 const Labs: LabManifest[] = [
+    // --- C Programming Labs ---
+    {
+        id: "c-exp-1",
+        subject: "C",
+        type: "experimental",
+        metadata: {
+            title: "Sum of Natural Numbers",
+            description: "Calculate the sum of first N natural numbers using a loop.",
+            difficulty: "Easy",
+            thumbnailUrl: "💻"
+        }
+    },
+    {
+        id: "c-exp-2",
+        subject: "C",
+        type: "experimental",
+        metadata: {
+            title: "Factorial of a Number",
+            description: "Recursive implementation of factorial calculation.",
+            difficulty: "Easy",
+            thumbnailUrl: "💻"
+        }
+    },
+
+    // --- DSA Labs ---
+    {
+        id: "dsa-exp-1",
+        subject: "DSA",
+        type: "experimental",
+        metadata: {
+            title: "Binary Search Implementation",
+            description: "Efficient searching in a sorted array using binary search.",
+            difficulty: "Medium",
+            thumbnailUrl: "📊"
+        }
+    },
+    {
+        id: "dsa-exp-2",
+        subject: "DSA",
+        type: "experimental",
+        metadata: {
+            title: "Reverse an Array",
+            description: "Algorithm to reverse elements of an array in-place.",
+            difficulty: "Easy",
+            thumbnailUrl: "📊"
+        }
+    },
+
     // --- DBMS Labs ---
     {
         id: "dbms-exp-1",
@@ -302,6 +353,110 @@ const Labs: LabManifest[] = [
             description: "Master information hiding and abstract class design.",
             difficulty: "Hard",
             thumbnailUrl: "💻"
+        }
+    },
+
+    // --- MPMC Labs ---
+    {
+        id: "mpmc-exp-1",
+        subject: "MPMC",
+        type: "experimental",
+        metadata: {
+            title: "Decimal Addition & Subtraction",
+            description: "Binary Coded Decimal (BCD) arithmetic using DAA instruction.",
+            difficulty: "Medium",
+            thumbnailUrl: "📟"
+        }
+    },
+    {
+        id: "mpmc-exp-2",
+        subject: "MPMC",
+        type: "experimental",
+        metadata: {
+            title: "Hexadecimal Addition & Subtraction",
+            description: "8-bit hexadecimal arithmetic operations.",
+            difficulty: "Easy",
+            thumbnailUrl: "📟"
+        }
+    },
+    {
+        id: "mpmc-exp-3",
+        subject: "MPMC",
+        type: "experimental",
+        metadata: {
+            title: "Addition & Subtraction of Two BCD Numbers",
+            description: "Advanced BCD operations with carry/borrow handling.",
+            difficulty: "Hard",
+            thumbnailUrl: "📟"
+        }
+    },
+    {
+        id: "mpmc-exp-4",
+        subject: "MPMC",
+        type: "experimental",
+        metadata: {
+            title: "Multiplication & Division of Two 8-bit Numbers",
+            description: "Repeated addition and repeated subtraction methods.",
+            difficulty: "Medium",
+            thumbnailUrl: "📟"
+        }
+    },
+    {
+        id: "mpmc-exp-5",
+        subject: "MPMC",
+        type: "experimental",
+        metadata: {
+            title: "Find Largest & Smallest Number in an Array",
+            description: "Array traversal and comparison logic.",
+            difficulty: "Medium",
+            thumbnailUrl: "📟"
+        }
+    },
+    {
+        id: "mpmc-exp-6",
+        subject: "MPMC",
+        type: "experimental",
+        metadata: {
+            title: "Arrange Array in Ascending Order",
+            description: "Bubble sort implementation on 8085.",
+            difficulty: "Hard",
+            thumbnailUrl: "📟"
+        }
+    },
+    {
+        id: "mpmc-exp-7",
+        subject: "MPMC",
+        type: "experimental",
+        metadata: {
+            title: "Arrange Array in Descending Order",
+            description: "Selection/Bubble sort for descending order.",
+            difficulty: "Hard",
+            thumbnailUrl: "📟"
+        }
+    },
+    {
+        id: "mpmc-exp-8",
+        subject: "MPMC",
+        type: "experimental",
+        metadata: {
+            title: "Hexadecimal to ASCII & Vice Versa",
+            description: "Character encoding and data conversion.",
+            difficulty: "Medium",
+            thumbnailUrl: "📟"
+        }
+    },
+
+    // --- DAA Labs ---
+    {
+        id: "daa-exp-1",
+        subject: "DAA",
+        type: "experimental",
+        metadata: {
+            title: "Insertion Sort Time Complexity",
+            description: "Analyze the time complexity of Insertion Sort with different input sizes.",
+            difficulty: "Medium",
+            estimatedTime: "45 min",
+            thumbnailUrl: "📊"
         }
     }
 ];

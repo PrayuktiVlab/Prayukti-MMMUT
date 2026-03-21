@@ -4,17 +4,18 @@ import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { MOCK_TEACHER_DATA, StudentMetric } from '@/data/mock-teacher-data';
-import { Users, UserPlus, Activity, ShieldCheck, Search, Trash2, Edit, LogOut } from 'lucide-react';
+import { Users, UserPlus, Activity, ShieldCheck, Search, Trash2, Edit, LogOut, Video, LucideIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StudentTable } from '../teacher/StudentTable';
 import { AddTeacherDialog, Teacher } from './AddTeacherDialog';
+import { VideoManager } from '@/components/admin/VideoManager';
 import { AddStudentDialog } from '../teacher/AddStudentDialog';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { StudentDetailView } from '../teacher/StudentDetailView';
 
 // --- Admin Stats Component ---
-import { LucideIcon } from 'lucide-react';
+// import { LucideIcon } from 'lucide-react'; // Removing duplicate, already imported above or better to use named import if needed
 
 // --- Admin Stats Component ---
 interface AdminStatCardProps {
@@ -45,56 +46,97 @@ export default function AdminDashboard() {
     const [searchQuery, setSearchQuery] = useState("");
     const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
     const [isAddTeacherOpen, setIsAddTeacherOpen] = useState(false); // New dialog state
+    const [isVideoManagerOpen, setIsVideoManagerOpen] = useState(false); // New video manager state
     const [selectedStudent, setSelectedStudent] = useState<StudentMetric | null>(null);
     const [isClient, setIsClient] = useState(false);
 
-    // Initialize data from LocalStorage or Mock Data
+    const fetchUsers = async () => {
+        try {
+            const res = await fetch("http://localhost:5000/api/users");
+            if (!res.ok) throw new Error("Failed to fetch users");
+            const allUsers = await res.json();
+
+            // Separate students and teachers
+            const fetchedStudents = allUsers
+                .filter((u: any) => u.role === 'student')
+                .map((u: any) => ({
+                    id: u._id,
+                    name: u.fullName,
+                    email: u.email,
+                    rollNo: u.rollNo || "N/A", // Roll number might not exist in backend schema
+                    subject: u.subject || "Computer Networks",
+                    practicalsAssigned: 10,
+                    practicalsCompleted: 0,
+                    quizScoreAvg: 0,
+                    avgAttempts: 0,
+                    totalTimeSpent: 0,
+                    lastActive: u.createdAt || new Date().toISOString(),
+                    status: 'Average' as const,
+                    quizTrend: [],
+                    completedPracticals: [],
+                    weakAreas: []
+                }));
+
+            const fetchedTeachers = allUsers
+                .filter((u: any) => u.role === 'teacher')
+                .map((u: any) => ({
+                    id: u._id,
+                    name: u.fullName,
+                    email: u.email,
+                    employeeId: u.employeeId || "N/A",
+                    subject: u.subject || "Computer Networks",
+                    status: 'Active',
+                    joinedDate: u.createdAt || new Date().toISOString()
+                }));
+
+            setData(fetchedStudents);
+            setTeachers(fetchedTeachers);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            // Fallback to empty if API fails
+            setData([]);
+            setTeachers([]);
+        } finally {
+            setIsClient(true);
+        }
+    };
+
+    // Fetch data on mount
     useEffect(() => {
-        const storedData = localStorage.getItem('vlab_students');
-        if (storedData) {
-            setData(JSON.parse(storedData));
-        } else {
-            setData(MOCK_TEACHER_DATA);
-            localStorage.setItem('vlab_students', JSON.stringify(MOCK_TEACHER_DATA));
-        }
-
-        // Initialize Teachers
-        const storedTeachers = localStorage.getItem('vlab_teachers');
-        if (storedTeachers) {
-            setTeachers(JSON.parse(storedTeachers));
-        }
-
-        setIsClient(true);
+        fetchUsers();
     }, []);
 
-    // Save to LocalStorage whenever data changes
-    useEffect(() => {
-        if (isClient) {
-            if (data.length > 0) localStorage.setItem('vlab_students', JSON.stringify(data));
-            localStorage.setItem('vlab_teachers', JSON.stringify(teachers));
-        }
-    }, [data, teachers, isClient]);
+    // We no longer sync automatically to localStorage unless we specifically want a cache
+    // Let's remove the second useEffect that syncs on data change.
 
     const handleAddStudent = (newStudent: StudentMetric) => {
-        const updatedData = [newStudent, ...data];
-        setData(updatedData);
-
-        // Force immediate save and notify
-        localStorage.setItem('vlab_students', JSON.stringify(updatedData));
+        // Assume API call succeeded in AddStudentDialog
+        setData(prev => [newStudent, ...prev]);
         window.dispatchEvent(new Event('vlab_students_updated'));
-
         alert("Student added successfully to the system.");
     };
 
     const handleAddTeacher = (newTeacher: Teacher) => {
+        // Assume API call succeeded in AddTeacherDialog
         setTeachers(prev => [newTeacher, ...prev]);
         alert(`Teacher ${newTeacher.name} added successfully.`);
     };
 
-    const handleDeleteStudent = (id: string, name: string) => {
+    const handleDeleteStudent = async (id: string, name: string) => {
         if (confirm(`Are you sure you want to delete ${name}? This action cannot be undone.`)) {
-            const updatedData = data.filter(s => s.id !== id);
-            setData(updatedData);
+            try {
+                const res = await fetch(`http://localhost:5000/api/users/${id}`, {
+                    method: 'DELETE'
+                });
+                if (!res.ok) throw new Error("Failed to delete user");
+
+                // Update UI on success
+                const updatedData = data.filter(s => s.id !== id);
+                setData(updatedData);
+            } catch (err: any) {
+                console.error("Error deleting student:", err);
+                alert("Failed to delete student: " + err.message);
+            }
         }
     };
 
@@ -142,6 +184,9 @@ export default function AdminDashboard() {
                                 />
                             </div>
                             <div className="flex gap-2">
+                                <Button onClick={() => setIsVideoManagerOpen(true)} variant="outline" className="border-slate-300">
+                                    <Video className="mr-2 h-4 w-4" /> Manage Videos
+                                </Button>
                                 <Button onClick={() => setIsAddTeacherOpen(true)} variant="outline" className="border-slate-300">
                                     <UserPlus className="mr-2 h-4 w-4" /> Add Teacher
                                 </Button>
@@ -202,6 +247,18 @@ export default function AdminDashboard() {
                         </Card>
 
                         {/* Dialogs */}
+                        <Dialog open={isVideoManagerOpen} onOpenChange={setIsVideoManagerOpen}>
+                            <DialogContent className="max-w-2xl">
+                                <DialogHeader>
+                                    <DialogTitle>Experiment Video Manager</DialogTitle>
+                                    <DialogDescription>
+                                        Assign YouTube videos to experiments.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <VideoManager />
+                            </DialogContent>
+                        </Dialog>
+
                         <AddStudentDialog
                             open={isAddStudentOpen}
                             onOpenChange={setIsAddStudentOpen}
