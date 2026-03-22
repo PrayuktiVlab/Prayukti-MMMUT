@@ -21,7 +21,7 @@ const sendEmail = async ({ to, subject, text, html }) => {
     try {
         const transporter = await getTransporter();
         const info = await transporter.sendMail({
-            from: `"Prayukti vLAB" <${process.env.SMTP_USER || 'no-reply@vlab.com'}>`,
+            from: `"Prayukti vLAB" <${process.env.SMTP_USER || process.env.EMAIL_USER || 'no-reply@vlab.com'}>`,
             to,
             subject,
             text,

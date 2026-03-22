@@ -29,6 +29,25 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    enrollmentNo: {
+        type: String
+    },
+    rollNo: {
+        type: String
+    },
+    branch: {
+        type: String
+    },
+    year: {
+        type: Number
+    },
+    semester: {
+        type: Number
+    },
+    assignedSubjects: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subject'
+    }],
     createdAt: {
         type: Date,
         default: Date.now
