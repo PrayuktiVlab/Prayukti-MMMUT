@@ -1,27 +1,18 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const generateOtp = require('../utils/generateOtp');
+const { sendEmail } = require('../services/emailService');
 
-// Transporter configured once
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+// @desc    Register a new user
+// @route   POST /api/auth/register
+// @access  Public
+const signupUser = async (req, res) => {
+    const { 
+        fullName, email, password, role, 
+        enrollmentNo, rollNo, branch, year, semester 
+    } = req.body;
 
-const isAllowedDomain = (email) => {
-    if (!email) return false;
-    const cleanEmail = email.toLowerCase().trim();
-    return cleanEmail.endsWith("@mmmut.ac.in");
-};
-
-exports.signupUser = async (req, res) => {
     try {
         const { fullName, email, password, rollNo } = req.body;
         console.log(`[AUTH] Registration attempt: ${email}`);
@@ -32,19 +23,33 @@ exports.signupUser = async (req, res) => {
         }
 
         let user = await User.findOne({ email });
-        console.log(`[AUTH] User found in DB: ${!!user}`);
 
+        if (user) {
+            return res.status(400).json({ message: 'User already exists' });
         if (user && user.isVerified) {
             console.log(`[AUTH] User already verified: ${email}`);
             return res.status(400).json({ message: "User already registered" });
         }
 
         const otp = generateOtp();
-        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
-        console.log(`[AUTH] OTP generated: ${otp}, Expiry: ${otpExpiry}`);
+        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        user = new User({
+            fullName,
+            email,
+            password: hashedPassword,
+            role: role || 'student',
+            otp,
+            otpExpiry,
+            isVerified: false,
+            enrollmentNo,
+            rollNo,
+            branch,
+            year,
+            semester
+        });
         if (user) {
             console.log(`[AUTH] Updating unverified user: ${email}`);
             user.fullName = fullName;
@@ -69,64 +74,87 @@ exports.signupUser = async (req, res) => {
 
         console.log(`[AUTH] User record saved. Sending email to ${email}...`);
 
-        const mailOptions = {
-            from: `"Prayukti vLAB" <${process.env.EMAIL_USER}>`,
-            to: email,
-            subject: "Prayukti vLAB OTP Verification",
-            text: `Your OTP is: ${otp}\nValid for 10 minutes.`
-        };
+        await user.save();
 
+        // Send OTP via Email
         try {
-            await transporter.sendMail(mailOptions);
-            console.log(`[AUTH] Email sent successfully to ${email}`);
-            res.status(200).json({ message: "OTP sent successfully" });
-        } catch (error) {
-            console.error("[AUTH] Mailer ERROR:", error);
-            res.status(500).json({ message: "Error sending OTP. Please try again." });
+            await sendEmail({
+                to: email,
+                subject: 'Your OTP for Prayukti vLAB',
+                html: `<h3>Welcome to Prayukti vLAB!</h3><p>Your OTP is: <strong>${otp}</strong></p><p>It will expire in 10 minutes.</p>`
+            });
+        } catch (mailError) {
+            console.error("Signup email error:", mailError);
         }
-    } catch (err) {
-        console.error("[AUTH] Signup CRASH:", err);
-        res.status(500).json({ message: "Server error during registration" });
+
+        res.status(201).json({ message: 'Registration successful. Please verify your OTP.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
-exports.verifyOtp = async (req, res) => {
+// @desc    Verify OTP
+// @route   POST /api/auth/verify-otp
+// @access  Public
+const verifyOtp = async (req, res) => {
+    const { email, otp } = req.body;
+
     try {
-        const { email, otp } = req.body;
         const user = await User.findOne({ email });
 
         if (!user) {
+            return res.status(404).json({ message: 'User not found' });
             return res.status(404).json({ message: "User not registered" });
         }
 
-        if (user.otp !== otp) {
-            return res.status(400).json({ message: "Invalid OTP" });
+        if (user.isVerified) {
+            return res.status(400).json({ message: 'User already verified' });
         }
 
-        if (user.otpExpiry < Date.now()) {
-            return res.status(400).json({ message: "OTP expired" });
+        if (user.otp !== otp || user.otpExpiry < Date.now()) {
+            return res.status(400).json({ message: 'Invalid or expired OTP' });
         }
 
         user.isVerified = true;
-        user.otp = null;
-        user.otpExpiry = null;
+        user.otp = undefined;
+        user.otpExpiry = undefined;
         await user.save();
 
-        res.status(200).json({ message: "Account verified successfully" });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Server error during verification" });
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+            expiresIn: '30d'
+        });
+
+        res.status(200).json({
+            token,
+            user: {
+                id: user._id,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
+// @desc    Login user
+// @route   POST /api/auth/login
+// @access  Public
+const signinUser = async (req, res) => {
+    const { email, password } = req.body;
 exports.signinUser = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         console.log(`[AUTH] Login attempt: ${email}`);
 
+    try {
         const user = await User.findOne({ email });
 
         if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
             console.log(`[AUTH] User not found: ${email}`);
             return res.status(404).json({ message: "User not registered" });
         }
@@ -138,9 +166,18 @@ exports.signinUser = async (req, res, next) => {
         }
 
         if (!user.isVerified) {
-            console.log(`[AUTH] User not verified: ${email}`);
-            return res.status(401).json({ message: "Your account is not verified" });
+            return res.status(403).json({ message: 'Please verify your email first' });
         }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+            expiresIn: '30d'
+        });
 
         // Set data for middleware
         res.locals.userId = user._id;
@@ -171,7 +208,6 @@ exports.sendSigninResponse = (req, res) => {
         );
 
         res.status(200).json({
-            message: "Login successful",
             token,
             user: {
                 id: userId,
@@ -181,18 +217,30 @@ exports.sendSigninResponse = (req, res) => {
                 role: userRole
             }
         });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     } catch (err) {
         console.error("[AUTH] Signin Response Error:", err);
         res.status(500).json({ message: "Failed to finalize login response" });
     }
 };
 
-exports.resendOtp = async (req, res) => {
+// @desc    Resend OTP
+// @route   POST /api/auth/resend-otp
+// @access  Public
+const resendOtp = async (req, res) => {
+    const { email } = req.body;
+
     try {
-        const { email } = req.body;
         const user = await User.findOne({ email });
 
         if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.isVerified) {
+            return res.status(400).json({ message: 'User already verified' });
             return res.status(404).json({ message: "User not registered" });
         }
 
@@ -203,18 +251,22 @@ exports.resendOtp = async (req, res) => {
         user.otpExpiry = otpExpiry;
         await user.save();
 
-        const mailOptions = {
-            from: `"Prayukti vLAB" <${process.env.EMAIL_USER}>`,
+        await sendEmail({
             to: email,
-            subject: "Prayukti vLAB OTP Verification",
-            text: `Your OTP is: ${otp}\nValid for 10 minutes.`
-        };
+            subject: 'New OTP for Prayukti vLAB',
+            html: `<h3>New OTP is: <strong>${otp}</strong></h3><p>It will expire in 10 minutes.</p>`
+        });
 
-        await transporter.sendMail(mailOptions);
-        res.status(200).json({ message: "New OTP sent to email" });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Server error during Resend OTP" });
+        res.status(200).json({ message: 'OTP resent successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
+module.exports = {
+    signupUser,
+    verifyOtp,
+    signinUser,
+    resendOtp
+};
