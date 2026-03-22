@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Loader2, GraduationCap, School, ShieldCheck, User, Lock, Mail } from "lucide-react";
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 type UserRole = "student" | "teacher" | "admin";
 
@@ -173,7 +173,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:4rem_4rem] p-4">
+        <div suppressHydrationWarning className="min-h-screen flex items-center justify-center bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:4rem_4rem] p-4">
             <div className="max-w-md w-full bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
                 <div className={`p-10 text-center relative overflow-hidden transition-all duration-500 
                     ${role === 'student' ? 'bg-[#d32f2f]' : role === 'teacher' ? 'bg-orange-600' : 'bg-slate-800'}`}>
@@ -245,6 +245,7 @@ export default function LoginPage() {
                             )}
 
                             <Button
+                                suppressHydrationWarning
                                 type="submit"
                                 disabled={loading}
                                 className={`w-full py-8 text-lg font-black tracking-widest rounded-2xl shadow-xl transition-all active:scale-[0.98]
@@ -257,6 +258,7 @@ export default function LoginPage() {
 
                             {role === 'student' && (
                                 <button
+                                    suppressHydrationWarning
                                     type="button"
                                     onClick={handleTestLogin}
                                     disabled={loading}

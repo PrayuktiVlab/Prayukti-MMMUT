@@ -15,6 +15,7 @@ const isAllowedDomain = (email) => {
 // @access  Public
 const signupUser = async (req, res) => {
     try {
+        const { fullName, email, password, rollNo } = req.body;
         const { fullName, email, password, rollNo, role, enrollmentNo, branch, year, semester } = req.body;
         console.log(`[AUTH] Registration attempt: ${email}`);
 
@@ -46,6 +47,9 @@ const signupUser = async (req, res) => {
         } else {
             console.log(`[AUTH] Creating new user: ${email}`);
             user = new User({
+                fullName: fullName,
+                rollNo: rollNo,
+                email: email,
                 fullName,
                 email,
                 password: hashedPassword,
@@ -115,6 +119,7 @@ const verifyOtp = async (req, res) => {
     }
 };
 
+exports.signinUser = async (req, res, next) => {
 // @desc    Login user
 // @route   POST /api/auth/login
 // @access  Public
@@ -183,6 +188,7 @@ const signinUser = async (req, res, next) => {
 /**
  * Send final signin response after middleware sequence
  */
+exports.sendSigninResponse = (req, res) => {
 const sendSigninResponse = (req, res) => {
     try {
         const { userId, userEmail, userRole, userFullName, userRollNo, attendance_log_id } = res.locals;

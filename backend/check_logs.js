@@ -1,4 +1,24 @@
 const mongoose = require('mongoose');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+const AttendanceLog = require('./models/AttendanceLog');
+
+async function checkLogs() {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        const logs = await AttendanceLog.find({ lab_id: { $ne: null } });
+        console.log(JSON.stringify(logs.map(l => ({ 
+            id: l._id,
+            lab_id: l.lab_id, 
+            subject_id: l.subject_id 
+        })), null, 2));
+        await mongoose.disconnect();
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+checkLogs();
 require('dotenv').config();
 
 mongoose.connect(process.env.MONGO_URI).then(async () => {

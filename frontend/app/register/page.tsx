@@ -18,10 +18,11 @@ import {
 } from "@/components/ui/select";
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 export default function RegisterPage() {
     const [fullName, setFullName] = useState("");
+    const [rollNo, setRollNo] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [enrollmentNo, setEnrollmentNo] = useState("");
@@ -52,6 +53,7 @@ export default function RegisterPage() {
         try {
             await axios.post(`${API_URL}/api/auth/register`, {
                 fullName,
+                rollNo,
                 email,
                 password,
                 enrollmentNo,
