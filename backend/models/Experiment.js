@@ -6,14 +6,15 @@ const ExperimentSchema = new mongoose.Schema({
         required: true
     },
     subject: {
-    title: {
-        type: String,
-        required: true
-    },
-    subjectId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subject',
-        required: true
+        title: {
+            type: String,
+            required: true
+        },
+        subjectId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Subject',
+            required: true
+        }
     },
     slug: {
         type: String,

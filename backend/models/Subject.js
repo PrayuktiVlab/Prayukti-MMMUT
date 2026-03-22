@@ -21,6 +21,7 @@ const SubjectSchema = new mongoose.Schema({
     hasLab: {
         type: Boolean,
         default: true
+    },
     title: {
         type: String,
         required: true

@@ -47,7 +47,7 @@ export function StudentDashboard() {
 
     const getStoredUser = () => {
         if (typeof window === 'undefined') return null;
-        const user = localStorage.getItem('user');
+        const user = localStorage.getItem('vlab_user');
         return user ? JSON.parse(user) : null;
     };
 
@@ -87,8 +87,8 @@ export function StudentDashboard() {
                                 size="sm"
                                 className="h-9 px-4 uppercase text-xs font-bold tracking-wider hover:bg-black hover:text-white transition-all rounded-lg"
                                 onClick={() => {
-                                    localStorage.removeItem('token');
-                                    localStorage.removeItem('user');
+                                    localStorage.removeItem('vlab_token');
+                                    localStorage.removeItem('vlab_user');
                                 }}
                             >
                                 Logout

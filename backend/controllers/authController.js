@@ -4,17 +4,18 @@ const bcrypt = require('bcryptjs');
 const generateOtp = require('../utils/generateOtp');
 const { sendEmail } = require('../services/emailService');
 
+const isAllowedDomain = (email) => {
+    if (!email) return false;
+    const cleanEmail = email.toLowerCase().trim();
+    return cleanEmail.endsWith("@mmmut.ac.in");
+};
+
 // @desc    Register a new user
 // @route   POST /api/auth/register
 // @access  Public
 const signupUser = async (req, res) => {
-    const { 
-        fullName, email, password, role, 
-        enrollmentNo, rollNo, branch, year, semester 
-    } = req.body;
-
     try {
-        const { fullName, email, password, rollNo } = req.body;
+        const { fullName, email, password, rollNo, role, enrollmentNo, branch, year, semester } = req.body;
         console.log(`[AUTH] Registration attempt: ${email}`);
 
         if (!isAllowedDomain(email)) {
@@ -24,8 +25,6 @@ const signupUser = async (req, res) => {
 
         let user = await User.findOne({ email });
 
-        if (user) {
-            return res.status(400).json({ message: 'User already exists' });
         if (user && user.isVerified) {
             console.log(`[AUTH] User already verified: ${email}`);
             return res.status(400).json({ message: "User already registered" });
@@ -33,23 +32,8 @@ const signupUser = async (req, res) => {
 
         const otp = generateOtp();
         const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        user = new User({
-            fullName,
-            email,
-            password: hashedPassword,
-            role: role || 'student',
-            otp,
-            otpExpiry,
-            isVerified: false,
-            enrollmentNo,
-            rollNo,
-            branch,
-            year,
-            semester
-        });
         if (user) {
             console.log(`[AUTH] Updating unverified user: ${email}`);
             user.fullName = fullName;
@@ -57,24 +41,28 @@ const signupUser = async (req, res) => {
             user.password = hashedPassword;
             user.otp = otp;
             user.otpExpiry = otpExpiry;
+            user.role = role || 'student';
             await user.save();
         } else {
             console.log(`[AUTH] Creating new user: ${email}`);
             user = new User({
-                fullName: fullName,
-                rollNo: rollNo,
-                email: email,
+                fullName,
+                email,
                 password: hashedPassword,
-                otp: otp,
-                otpExpiry: otpExpiry,
-                isVerified: false
+                role: role || 'student',
+                otp,
+                otpExpiry,
+                isVerified: false,
+                rollNo,
+                enrollmentNo,
+                branch,
+                year,
+                semester
             });
             await user.save();
         }
 
         console.log(`[AUTH] User record saved. Sending email to ${email}...`);
-
-        await user.save();
 
         // Send OTP via Email
         try {
@@ -85,12 +73,13 @@ const signupUser = async (req, res) => {
             });
         } catch (mailError) {
             console.error("Signup email error:", mailError);
+            // We still return 201 because the user is created
         }
 
         res.status(201).json({ message: 'Registration successful. Please verify your OTP.' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error("[AUTH] Signup CRASH:", error);
+        res.status(500).json({ message: 'Server error during registration' });
     }
 };
 
@@ -98,13 +87,11 @@ const signupUser = async (req, res) => {
 // @route   POST /api/auth/verify-otp
 // @access  Public
 const verifyOtp = async (req, res) => {
-    const { email, otp } = req.body;
-
     try {
+        const { email, otp } = req.body;
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
             return res.status(404).json({ message: "User not registered" });
         }
 
@@ -121,40 +108,49 @@ const verifyOtp = async (req, res) => {
         user.otpExpiry = undefined;
         await user.save();
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-            expiresIn: '30d'
-        });
-
-        res.status(200).json({
-            token,
-            user: {
-                id: user._id,
-                fullName: user.fullName,
-                email: user.email,
-                role: user.role
-            }
-        });
+        res.status(200).json({ message: "Account verified successfully" });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error during verification' });
     }
 };
 
 // @desc    Login user
 // @route   POST /api/auth/login
 // @access  Public
-const signinUser = async (req, res) => {
-    const { email, password } = req.body;
-exports.signinUser = async (req, res, next) => {
+const signinUser = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         console.log(`[AUTH] Login attempt: ${email}`);
 
-    try {
-        const user = await User.findOne({ email });
+        let user;
+        try {
+            user = await User.findOne({ email });
+        } catch (dbErr) {
+            console.error("[AUTH] DB connection error during login:", dbErr.message);
+            if (process.env.MOCK_AUTH === 'true') {
+                console.log("[AUTH] MOCK_AUTH enabled. Bypassing DB for:", email);
+            } else {
+                throw dbErr;
+            }
+        }
+
+        // Mock Auth Bypass
+        if (!user && process.env.MOCK_AUTH === 'true') {
+            if (email && email.toLowerCase().endsWith("@mmmut.ac.in")) {
+                console.log(`[AUTH] MOCK LOGIN SUCCESS for domain: ${email}`);
+                res.locals.userId = "mock_user_id_" + Date.now();
+                res.locals.userRole = email.toLowerCase().includes("admin") ? "admin" : "student";
+                res.locals.userEmail = email;
+                res.locals.userFullName = "Mock User (" + res.locals.userRole + ")";
+                res.locals.userRollNo = "MOCK12345";
+                return next();
+            } else {
+                return res.status(401).json({ message: "Mock Auth: Only @mmmut.ac.in emails allowed for bypass" });
+            }
+        }
 
         if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
             console.log(`[AUTH] User not found: ${email}`);
             return res.status(404).json({ message: "User not registered" });
         }
@@ -168,16 +164,6 @@ exports.signinUser = async (req, res, next) => {
         if (!user.isVerified) {
             return res.status(403).json({ message: 'Please verify your email first' });
         }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-            expiresIn: '30d'
-        });
 
         // Set data for middleware
         res.locals.userId = user._id;
@@ -197,7 +183,7 @@ exports.signinUser = async (req, res, next) => {
 /**
  * Send final signin response after middleware sequence
  */
-exports.sendSigninResponse = (req, res) => {
+const sendSigninResponse = (req, res) => {
     try {
         const { userId, userEmail, userRole, userFullName, userRollNo, attendance_log_id } = res.locals;
 
@@ -208,6 +194,7 @@ exports.sendSigninResponse = (req, res) => {
         );
 
         res.status(200).json({
+            message: "Login successful",
             token,
             user: {
                 id: userId,
@@ -217,9 +204,6 @@ exports.sendSigninResponse = (req, res) => {
                 role: userRole
             }
         });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
     } catch (err) {
         console.error("[AUTH] Signin Response Error:", err);
         res.status(500).json({ message: "Failed to finalize login response" });
@@ -230,18 +214,16 @@ exports.sendSigninResponse = (req, res) => {
 // @route   POST /api/auth/resend-otp
 // @access  Public
 const resendOtp = async (req, res) => {
-    const { email } = req.body;
-
     try {
+        const { email } = req.body;
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: "User not registered" });
         }
 
         if (user.isVerified) {
             return res.status(400).json({ message: 'User already verified' });
-            return res.status(404).json({ message: "User not registered" });
         }
 
         const otp = generateOtp();
@@ -268,5 +250,6 @@ module.exports = {
     signupUser,
     verifyOtp,
     signinUser,
+    sendSigninResponse,
     resendOtp
 };
