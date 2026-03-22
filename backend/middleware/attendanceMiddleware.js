@@ -78,12 +78,22 @@ exports.onLogout = async (req, res) => {
       const now = new Date();
       const duration = Math.round(((now - new Date(log.login_time)) / 60000) * 10) / 10;
       
+      // Calculate status based on duration and activity_score
+      const activity_score = log.activity_score || 0;
+      let status = "present";
+      if (duration < 2) {
+          status = "absent";
+      } else if (activity_score < 20) {
+          status = "inactive";
+      }
+
       await AttendanceLog.updateOne(
         { _id: log._id },
         { 
           $set: { 
             logout_time: now, 
-            session_duration: duration 
+            session_duration: duration,
+            status: status
           } 
         }
       );

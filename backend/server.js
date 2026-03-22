@@ -47,7 +47,7 @@ const startServer = async () => {
             let testUser = await User.findOne({ email: testEmail });
             if (!testUser) {
                 console.log("Auto-seeding test student for deployment...");
-                const hashedPassword = await bcrypt.hash("password123", 10);
+                const hashedPassword = await bcrypt.hash("test123", 10);
                 testUser = new User({
                     fullName: "Test Student",
                     email: testEmail,

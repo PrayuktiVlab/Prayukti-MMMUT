@@ -2,14 +2,15 @@ const Subject = require('../models/Subject');
 
 exports.createSubject = async (req, res) => {
     try {
-        const { title, description, icon, experimentsCount, slug } = req.body;
+        const { title, description, icon, experimentsCount, slug, subject_id } = req.body;
 
         const newSubject = new Subject({
             title,
             description,
             icon,
             experimentsCount,
-            slug
+            slug,
+            subject_id
         });
 
         await newSubject.save();
@@ -37,48 +38,63 @@ exports.seedSubjects = async (req, res) => {
                 title: "Data Structures and Algorithms",
                 description: "Master arrays, linked lists, trees, and core algorithms with interactive execution.",
                 icon: "dsa",
-                experimentsCount: 0
+                experimentsCount: 0,
+                subject_id: "BCS-301"
             },
             {
                 title: "Computer Networks",
                 description: "Explore the architecture of the internet, networking protocols, and OSI models.",
                 icon: "cn",
                 experimentsCount: 0,
-                slug: "cn"
+                slug: "cn",
+                subject_id: "BCS-502"
             },
             {
                 title: "Digital Logic & Design",
                 description: "Master the fundamentals of digital electronics, logic gates, and circuit design.",
                 icon: "dld",
                 experimentsCount: 0,
-                slug: "dld"
+                slug: "dld",
+                subject_id: "BCS-303"
             },
             {
                 title: "Database Management",
                 description: "Learn to design, query, and manage relational databases using SQL.",
                 icon: "dbms",
                 experimentsCount: 0,
-                slug: "dbms"
+                slug: "dbms",
+                subject_id: "BCS-404"
             },
             {
                 title: "Object Oriented Programming",
                 description: "Learn the principles of encapsulation, inheritance, polymorphism, and abstraction.",
                 icon: "oops",
                 experimentsCount: 0,
-                slug: "oops"
+                slug: "oops",
+                subject_id: "BCS-405"
             },
             {
                 title: "Microprocessor and Microcontroller",
                 description: "Study the architecture, programming, and interfacing of 8085/8086 microprocessors.",
                 icon: "mpmc",
                 experimentsCount: 0,
-                slug: "mpmc"
+                slug: "mpmc",
+                subject_id: "BCS-506"
             },
             {
                 title: "C Programming Lab",
                 description: "Master the foundations of C programming, memory management, and data types.",
                 icon: "c",
-                experimentsCount: 0
+                experimentsCount: 0,
+                subject_id: "BCS-107"
+            },
+            {
+                title: "Design and Analysis of Algorithms",
+                description: "Design and Analysis of Algorithms Virtual Lab",
+                icon: "FlaskConical",
+                experimentsCount: 0,
+                slug: "daa",
+                subject_id: "BCS-408"
             }
         ];
 

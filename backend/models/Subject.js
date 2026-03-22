@@ -16,6 +16,11 @@ const SubjectSchema = new mongoose.Schema({
         unique: true,
         sparse: true
     },
+    subject_id: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
     experimentsCount: {
         type: Number,
         default: 0

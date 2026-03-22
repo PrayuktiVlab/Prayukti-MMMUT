@@ -193,4 +193,71 @@ router.get('/student/:student_id', protect, async (req, res) => {
     }
 });
 
+// 7. POST /log-lab - Auth: student
+router.post('/log-lab', protect, async (req, res) => {
+    try {
+        const { subject, labId } = req.body;
+        const student_id = req.user.id;
+        const logId = req.user.attendance_log_id;
+
+        // Map subject slug to official names and IDs
+        const subjectMap = {
+            'DSA': { id: 'BCS-301', name: 'Data Structures and Algorithms' },
+            'CN': { id: 'BCS-502', name: 'Computer Networks' },
+            'DLD': { id: 'BCS-303', name: 'Digital Logic & Design' },
+            'DBMS': { id: 'BCS-404', name: 'Database Management System' },
+            'OOPS': { id: 'BCS-405', name: 'Object Oriented Programming' },
+            'MPMC': { id: 'BCS-506', name: 'Microprocessor and Microcontroller' },
+            'C': { id: 'BCS-107', name: 'C Programming Lab' },
+            'DAA': { id: 'BCS-408', name: 'Design and Analysis of Algorithms' }
+        };
+
+        const target = subjectMap[subject.toUpperCase()] || { id: 'BCS-000', name: 'Unknown' };
+        
+        // Find existing log for this session
+        let log = await AttendanceLog.findById(logId);
+        
+        if (!log) {
+            // Fallback: search for latest active log for this student if token is missing ID
+            log = await AttendanceLog.findOne({ student_id, logout_time: null }).sort({ login_time: -1 });
+        }
+
+        if (log) {
+            // Update existing log
+            let currentIds = log.subject_id === 'BCS-000' ? [] : log.subject_id.split(', ');
+            let currentNames = log.subject_name === 'None' ? [] : log.subject_name.split(', ');
+
+            // Only add if not already present
+            if (!currentIds.includes(target.id)) {
+                currentIds.push(target.id);
+                currentNames.push(target.name);
+            }
+
+            log.subject_id = currentIds.length > 0 ? currentIds.join(', ') : target.id;
+            log.subject_name = currentNames.length > 0 ? currentNames.join(', ') : target.name;
+            log.lab_id = labId; // Keep the latest lab_id
+            
+            await log.save();
+            return res.status(200).json({ message: "Attendance updated", log });
+        } else {
+            // If no active log, create a new one (as a fallback)
+            const newLog = new AttendanceLog({
+                student_id,
+                student_email: req.user.email,
+                subject_id: target.id,
+                subject_name: target.name,
+                lab_id: labId,
+                login_time: new Date(),
+                date: new Date().toISOString().split('T')[0],
+                status: "in_progress"
+            });
+            await newLog.save();
+            return res.status(201).json({ message: "New lab attendance logged", log: newLog });
+        }
+    } catch (err) {
+        console.error("[ATTENDANCE] log-lab error:", err.message);
+        res.status(500).json({ message: "Failed to log lab attendance" });
+    }
+});
+
 module.exports = router;

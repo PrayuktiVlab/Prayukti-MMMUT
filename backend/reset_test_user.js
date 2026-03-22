@@ -11,7 +11,7 @@ async function resetUser() {
         console.log('Connected to MongoDB');
 
         const email = 'test.student@mmmut.ac.in';
-        const hashedPassword = await bcrypt.hash('password123', 10);
+        const hashedPassword = await bcrypt.hash('test123', 10);
 
         const user = await User.findOneAndUpdate(
             { email },

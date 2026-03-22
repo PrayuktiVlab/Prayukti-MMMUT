@@ -9,6 +9,17 @@ const AttendanceLogSchema = new mongoose.Schema({
     student_email: {
         type: String
     },
+    subject_id: {
+        type: String,
+        default: "BCS-000"
+    },
+    subject_name: {
+        type: String,
+        default: "None"
+    },
+    lab_id: {
+        type: String
+    },
     login_time: {
         type: Date,
         required: true
@@ -20,6 +31,15 @@ const AttendanceLogSchema = new mongoose.Schema({
     session_duration: {
         type: Number, // (minutes)
         default: 0
+    },
+    activity_score: {
+        type: Number,
+        default: 0
+    },
+    status: {
+        type: String,
+        enum: ["present", "inactive", "absent", "in_progress"],
+        default: "in_progress"
     },
     ip_address: {
         type: String

@@ -108,6 +108,7 @@ export default function StudentAttendancePage() {
                                 <TableRow>
                                     <TableHead className="px-8 font-black uppercase text-[10px] tracking-widest">Date</TableHead>
                                     <TableHead className="font-black uppercase text-[10px] tracking-widest">Login</TableHead>
+                                    <TableHead className="font-black uppercase text-[10px] tracking-widest">Subject</TableHead>
                                     <TableHead className="font-black uppercase text-[10px] tracking-widest">Duration</TableHead>
                                     <TableHead className="font-black uppercase text-[10px] tracking-widest">IP Address</TableHead>
                                     <TableHead className="px-8 font-black uppercase text-[10px] tracking-widest text-right">Activity</TableHead>
@@ -119,6 +120,9 @@ export default function StudentAttendancePage() {
                                         <TableRow key={log._id}>
                                             <TableCell className="px-8 font-bold">{log.date}</TableCell>
                                             <TableCell className="text-slate-500">{new Date(log.login_time).toLocaleTimeString()}</TableCell>
+                                            <TableCell className="text-[10px] font-bold uppercase tracking-tight text-blue-600 max-w-[150px] truncate">
+                                                {log.subject_name || "None"}
+                                            </TableCell>
                                             <TableCell className="font-mono text-xs">{log.session_duration} mins</TableCell>
                                             <TableCell className="text-slate-400 text-xs">{log.ip_address}</TableCell>
                                             <TableCell className="px-8 text-right">
