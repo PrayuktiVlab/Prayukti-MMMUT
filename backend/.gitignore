@@ -1,0 +1,12 @@
+node_modules/
+.env
+dist/
+build/
+*.log
+temp/
+.turbo/
+server_log.txt
+server_error.log
+test_out.txt
+shard_ips.txt
+{
