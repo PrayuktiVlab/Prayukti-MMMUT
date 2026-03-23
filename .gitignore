@@ -1,0 +1,8 @@
+# Root ignore for monorepo sanity
+node_modules/
+.env
+.next/
+dist/
+build/
+*.log
+.turbo/
