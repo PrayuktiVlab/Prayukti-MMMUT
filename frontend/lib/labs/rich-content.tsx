@@ -1473,6 +1473,183 @@ export const LAB_CONTENT: Record<string, LabContent> = {
         }
     },
 
+    "dld-exp-5": {
+        aim: "To design and implement Combinational Logic Circuits using Sum of Products (SOP) and Product of Sums (POS) forms.",
+        theory: (
+            <div className="space-y-8">
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">1. SOP and POS Forms</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        Any logic function can be expressed in two canonical forms: Sum of Products (SOP) and Product of Sums (POS). SOP is a logical OR of multiple AND terms, while POS is a logical AND of multiple OR terms.
+                    </p>
+                </section>
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">2. K-Map Simplification</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        Karnaugh Maps (K-Maps) are used to simplify these expressions to minimize the number of gates required for implementation.
+                    </p>
+                </section>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4">
+                <ol className="list-decimal pl-6 space-y-2">
+                    <li>Draw the truth table for the given logic function.</li>
+                    <li>Map the truth table entries onto a K-Map.</li>
+                    <li>Identify groups of 1s (for SOP) or 0s (for POS) to find the simplified expression.</li>
+                    <li>Build the circuit using the simplified expression in the simulator.</li>
+                </ol>
+            </div>
+        )
+    },
+
+    "dld-exp-6": {
+        aim: "To study and implement Decoder and Encoder circuits.",
+        theory: (
+            <div className="space-y-8">
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">1. Decoders</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        A decoder is a combinational circuit that converts binary information from 'n' input lines to a maximum of 2^n unique output lines.
+                    </p>
+                </section>
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">2. Encoders</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        An encoder is the inverse of a decoder. It has 2^n input lines and 'n' output lines, producing the binary code corresponding to the input value.
+                    </p>
+                </section>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4">
+                <ol className="list-decimal pl-6 space-y-2">
+                    <li>Verify the truth table of a 2:4 Decoder.</li>
+                    <li>Observe how the Enable (EN) pin controls the circuit.</li>
+                    <li>Implement a 4:2 Encoder and verify its outputs.</li>
+                </ol>
+            </div>
+        )
+    },
+
+    "dld-exp-7": {
+        aim: "To study and implement Multiplexer (MUX) and Demultiplexer (DEMUX) circuits.",
+        theory: (
+            <div className="space-y-8">
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">1. Multiplexer</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        A Multiplexer (Data Selector) is a circuit with many inputs but only one output. It selects one of many input signals and forwards it to the output based on 'select lines'.
+                    </p>
+                </section>
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">2. Demultiplexer</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        A Demultiplexer (Data Distributor) takes one input and routes it to one of multiple outputs based on select lines.
+                    </p>
+                </section>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4">
+                <ol className="list-decimal pl-6 space-y-2">
+                    <li>Set up a 4:1 MUX with four data inputs and two select lines.</li>
+                    <li>Observe how the output changes as you toggle select lines.</li>
+                    <li>Implement a 1:4 DEMUX and verify its routing logic.</li>
+                </ol>
+            </div>
+        )
+    },
+
+    "dld-exp-8": {
+        aim: "To study and implement Digital Comparators (1-bit and 4-bit).",
+        theory: (
+            <div className="space-y-8">
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">1. Digital Comparators</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        A comparator is a combinational circuit that compares two numbers (A and B) and determines their relative magnitudes (A &gt; B, A = B, or A &lt; B).
+                    </p>
+                </section>
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">2. 1-Bit vs 4-Bit</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        A 1-bit comparator compares two single bits, while a 4-bit comparator (like the 74L85 IC) compares two 4-bit nibbles.
+                    </p>
+                </section>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4">
+                <ol className="list-decimal pl-6 space-y-2">
+                    <li>Input two 4-bit numbers A and B.</li>
+                    <li>Observe which output (GT, EQ, LT) turns high.</li>
+                    <li>Test with values where A &gt; B, A = B, and A &lt; B.</li>
+                </ol>
+            </div>
+        )
+    },
+
+    "dld-exp-9": {
+        aim: "To study and verify the operation of various Flip-Flops (RS, JK, D, T).",
+        theory: (
+            <div className="space-y-8">
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">1. Flip-Flops</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        Flip-flops are the basic storage elements in sequential logic. They are clocked circuits that can store 1 bit of information. 
+                    </p>
+                </section>
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">2. Types</h3>
+                    <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                        <li><strong>D Flip-Flop:</strong> Follows the input after a clock edge.</li>
+                        <li><strong>JK Flip-Flop:</strong> Versatile FF that can toggle, set, or reset.</li>
+                        <li><strong>T Flip-Flop:</strong> Toggles the state on every clock pulse if T=1.</li>
+                    </ul>
+                </section>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4">
+                <ol className="list-decimal pl-6 space-y-2">
+                    <li>Select the Flip-Flop type (e.g., D-FF).</li>
+                    <li>Apply a clock pulse and observe the state change.</li>
+                    <li>Verify the truth table for each Flip-Flop type.</li>
+                </ol>
+            </div>
+        )
+    },
+
+    "dld-exp-10": {
+        aim: "To design and implement Synchronous and Asynchronous (Ripple) Counters.",
+        theory: (
+            <div className="space-y-8">
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">1. Counters</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        Counters are sequential circuits that go through a predefined sequence of states. They are built using a series of flip-flops.
+                    </p>
+                </section>
+                <section>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">2. Asynchronous vs Synchronous</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        In asynchronous counters, the clock of the next stage is driven by the output of the previous stage (Ripple effect). In synchronous counters, all flip-flops share the same clock line.
+                    </p>
+                </section>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4">
+                <ol className="list-decimal pl-6 space-y-2">
+                    <li>Set up the clock and HIGH signals.</li>
+                    <li>Observe the binary count sequence (Q0, Q1, etc.).</li>
+                    <li>Notice the propagation delay in the ripple counter compared to the synchronous version.</li>
+                </ol>
+            </div>
+        )
+    },
+
     // =========================================================================
     // OOPS EXPERIMENTS (EXISTING PLACEHOLDERS KEPT)
     // =========================================================================
@@ -1841,7 +2018,7 @@ HLT           ; Halt</pre>
                 <li>Set HL to array start. Load count in C.</li>
                 <li>Load first element in A.</li>
                 <li>LOOP: Increment HL. Compare M with A.</li>
-                <li>If M > A, MOV A, M.</li>
+                <li>If M &gt; A, MOV A, M.</li>
                 <li>Decrement C. If C != 0, goto LOOP.</li>
                 <li>Store A (Largest) in result memory.</li>
             </ol>
@@ -2134,4 +2311,116 @@ HLT</pre>
             }
         }
     },
+
+    // =========================================================================
+    // C PROGRAMMING EXPERIMENTS
+    // =========================================================================
+    "c-exp-1": {
+        aim: "To find the sum of first N natural numbers.",
+        theory: (
+            <div className="space-y-6">
+                <p className="text-gray-700 leading-relaxed">
+                    Calculating the sum of first N natural numbers is a fundamental exercise in learning loops. The sum can be calculated using a simple for loop or the mathematical formula: <code>Sum = N * (N + 1) / 2</code>.
+                </p>
+                <div className="bg-gray-50 p-6 rounded-xl border-l-4 border-blue-500">
+                    <h4 className="font-bold mb-2">Algorithm:</h4>
+                    <ol className="list-decimal pl-6 space-y-1 font-mono text-sm">
+                        <li>Start</li>
+                        <li>Initialize sum = 0</li>
+                        <li>Read value of N</li>
+                        <li>Loop from i=1 to N</li>
+                        <li>Update sum = sum + i</li>
+                        <li>Print sum</li>
+                        <li>End</li>
+                    </ol>
+                </div>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4 font-sans text-gray-700">
+                <p>1. Open the code editor and write the C program using a for loop.</p>
+                <p>2. Compile the code to check for syntax errors.</p>
+                <p>3. Run the program and provide the input value for N.</p>
+                <p>4. Observe the calculated sum output.</p>
+            </div>
+        )
+    },
+
+    "c-exp-2": {
+        aim: "To calculate the factorial of a given number.",
+        theory: (
+            <div className="space-y-6">
+                <p className="text-gray-700 leading-relaxed">
+                    The factorial of a non-negative integer n, denoted by n!, is the product of all positive integers less than or equal to n. 
+                    Example: 5! = 5 * 4 * 3 * 2 * 1 = 120.
+                </p>
+                <div className="bg-gray-900 text-green-400 p-6 rounded-xl font-mono text-sm overflow-x-auto">
+                    long factorial(int n) &#123; <br />
+                    &nbsp;&nbsp;if (n == 0) return 1; <br />
+                    &nbsp;&nbsp;else return n * factorial(n - 1); <br />
+                    &#125;
+                </div>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4 font-sans text-gray-700">
+                <p>1. Write the recursive function for factorial in the editor.</p>
+                <p>2. Call the function from the main block with a test input (e.g., 5).</p>
+                <p>3. Execute the program to see the result.</p>
+            </div>
+        )
+    },
+
+    // =========================================================================
+    // DSA EXPERIMENTS
+    // =========================================================================
+    "dsa-exp-1": {
+        aim: "To implement and analyze the Binary Search algorithm.",
+        theory: (
+            <div className="space-y-6">
+                <p className="text-gray-700 leading-relaxed">
+                    Binary search is an efficient algorithm for finding an item from a sorted list of items. It works by repeatedly dividing in half the portion of the list that could contain the item, until you've narrowed down the possible locations to just one.
+                </p>
+                <div className="bg-blue-50 p-4 rounded-lg border-2 border-blue-100 italic">
+                    Binary Search Time Complexity: O(log N)
+                </div>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4 text-gray-700">
+                <p>1. Ensure the input array is sorted in ascending order.</p>
+                <p>2. Define low=0 and high=n-1.</p>
+                <p>3. Calculate mid = low + (high-low)/2.</p>
+                <p>4. Compare target with array[mid] and update low/high accordingly.</p>
+            </div>
+        )
+    },
+
+    "dsa-exp-2": {
+        aim: "To implement the Reverse Array algorithm in-place.",
+        theory: (
+            <div className="space-y-6">
+                <p className="text-gray-700 leading-relaxed">
+                    Reversing an array involves swapping elements from the start and end of the array, moving towards the middle. This is done in-place to save memory.
+                </p>
+                <div className="bg-gray-50 p-6 rounded-xl font-mono text-sm border-2 border-dashed border-gray-300">
+                    void reverse(int arr[], int n) &#123; <br />
+                    &nbsp;&nbsp;int start = 0, end = n-1; <br />
+                    &nbsp;&nbsp;while(start &lt; end) &#123; <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;swap(arr[start], arr[end]); <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;start++; end--; <br />
+                    &nbsp;&nbsp;&#125; <br />
+                    &#125;
+                </div>
+            </div>
+        ),
+        procedure: (
+            <div className="space-y-4 text-gray-700">
+                <p>1. Initialize two pointers: start at 0 and end at n-1.</p>
+                <p>2. Using a while loop, swap elements at start and end.</p>
+                <p>3. Increment start and decrement end until they meet.</p>
+                <p>4. Print the final reversed array.</p>
+            </div>
+        )
+    }
 };

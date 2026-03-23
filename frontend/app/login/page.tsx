@@ -282,15 +282,13 @@ export default function LoginPage() {
 
                                         // Store token and user info
                                         if (typeof window !== 'undefined') {
-                                            localStorage.setItem("token", token);
-                                            localStorage.setItem("user", JSON.stringify(user));
+                                            localStorage.setItem("vlab_token", token);
+                                            localStorage.setItem("vlab_user", JSON.stringify(user));
                                         }
 
                                         setSuccess(true);
                                         setTimeout(() => {
-                                            if (role === 'teacher') router.push("/dashboard/teacher");
-                                            else if (role === 'admin') router.push("/dashboard/admin");
-                                            else router.push("/dashboard");
+                                            router.push("/dashboard");
                                         }, 1000);
 
                                     } catch (err: any) {

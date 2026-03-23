@@ -3,6 +3,7 @@
     "title": "Data Structures and Algorithms",
     "description": "Master arrays, linked lists, trees, and core algorithms with interactive execution.",
     "icon": "dsa",
+    "slug": "dsa",
     "experimentsCount": 0,
     "subject_id": "BCS-301"
   },
@@ -50,6 +51,7 @@
     "title": "C Programming Lab",
     "description": "Master the foundations of C programming, memory management, and data types.",
     "icon": "c",
+    "slug": "c",
     "experimentsCount": 0,
     "subject_id": "BCS-107"
   },

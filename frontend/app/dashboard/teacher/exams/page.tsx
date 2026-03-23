@@ -26,10 +26,11 @@ export default function TeacherExamsDashboard() {
 
     const loadExams = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('vlab_token');
             if (!token) return router.push('/login');
 
-            const res = await fetch("http://localhost:5000/api/exams/teacher", {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+            const res = await fetch(`${API_URL}/api/exams/teacher`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -43,7 +44,8 @@ export default function TeacherExamsDashboard() {
 
     const loadStudents = async () => {
         try {
-            const res = await fetch("http://localhost:5000/api/users");
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+            const res = await fetch(`${API_URL}/api/users`);
             if (res.ok) {
                 const allUsers = await res.json();
                 setStudents(allUsers.filter((u: any) => u.role === 'student'));
@@ -65,11 +67,12 @@ export default function TeacherExamsDashboard() {
             return;
         }
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('vlab_token');
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
             // Assign all students for simplicity right now
             const assignedStudents = students.map(s => s._id);
 
-            const res = await fetch("http://localhost:5000/api/exams/create", {
+            const res = await fetch(`${API_URL}/api/exams/create`, {
                 method: "POST",
                 headers: {
                     'Authorization': `Bearer ${token}`,

@@ -124,24 +124,23 @@ const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
     "dsa-exp-3": CodeCompiler,
 };
 
-export default function SimulationRenderer({ labId }: { labId: string }) {
+export default function SimulationRenderer({ labId, initialCode, language }: {
+    labId: string,
+    initialCode?: string,
+    language?: string
+}) {
     let Component = COMPONENT_MAP[labId];
 
-    // Fallback logic for arbitrary teacher inputs during exams
+    // Fallback logic for arbitrary teacher inputs or missing mappings
     if (!Component) {
         const lowerId = labId.toLowerCase();
         if (lowerId.startsWith('cn')) Component = COMPONENT_MAP['cn-exp-1'];
         else if (lowerId.startsWith('oops')) Component = COMPONENT_MAP['oops-exp-1'];
         else if (lowerId.startsWith('dbms')) Component = COMPONENT_MAP['dbms-exp-1'];
         else if (lowerId.startsWith('mpmc')) Component = COMPONENT_MAP['mpmc-exp-1'];
+        else if (lowerId.startsWith('c-') || lowerId.startsWith('dsa-')) Component = CodeCompiler;
         else Component = COMPONENT_MAP['dld-exp-1']; // Default to DLD circuit builder
     }
-export default function SimulationRenderer({ labId, initialCode, language }: {
-    labId: string,
-    initialCode?: string,
-    language?: string
-}) {
-    const Component = COMPONENT_MAP[labId] || CodeCompiler; // Fallback to compiler if not explicitly mapped
 
     if (!Component) {
         return (
@@ -151,7 +150,6 @@ export default function SimulationRenderer({ labId, initialCode, language }: {
         );
     }
 
-    // Pass labId to the component. Some older components might ignore it, 
-    // but newer ones like MPMCSimulator expect it.
+    // Pass labId and practicalId for compatibility with various components
     return <Component labId={labId} practicalId={labId} initialCode={initialCode} language={language} />;
 }

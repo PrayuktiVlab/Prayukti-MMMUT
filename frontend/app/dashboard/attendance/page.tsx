@@ -23,7 +23,7 @@ export default function StudentAttendancePage() {
                 const user = JSON.parse(userJson);
                 const userId = user.id || user._id;
 
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/attendance/student/${userId}`, {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/attendance/student/${userId}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('vlab_token')}` }
                 });
                 setAttendanceData(response.data);

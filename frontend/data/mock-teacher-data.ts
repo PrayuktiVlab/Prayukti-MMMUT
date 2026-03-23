@@ -4,7 +4,9 @@ export type PerformanceLevel = 'Weak' | 'Average' | 'Good' | 'Excellent';
 
 export interface StudentMetric {
     id: string;
+    _id?: string;
     name: string;
+    fullName?: string;
     rollNo: string;
     email: string;
     subject: string;

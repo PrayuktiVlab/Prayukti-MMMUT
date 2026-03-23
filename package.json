@@ -2,22 +2,19 @@
   "name": "prayukti-vlab",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "start": "npm run start:frontend",
-    "start:frontend": "turbo run start --filter=frontend",
-    "start:backend": "turbo run start --filter=backend",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev": "npm run dev:frontend & npm run dev:backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "build:backend": "npm run build --prefix backend",
+    "build": "npm run build:frontend && npm run build:backend",
+    "lint:frontend": "npm run lint --prefix frontend",
+    "lint": "npm run lint:frontend",
+    "check-types": "npm run check-types --prefix frontend",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "prettier": "^3.7.4",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "tailwindcss": "^3.4.1",
-    "tailwindcss-animate": "^1.0.7",
-    "turbo": "^2.7.2",
     "typescript": "5.9.2"
   },
   "engines": {
@@ -26,8 +23,7 @@
   "packageManager": "npm@11.6.2",
   "workspaces": [
     "frontend",
-    "backend",
-    "packages/*"
+    "backend"
   ],
   "overrides": {
     "react": "19.0.0",

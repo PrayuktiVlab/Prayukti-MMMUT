@@ -156,7 +156,8 @@ function useLabNavigate() {
         // Check for JWT / session token stored by the login page
         const token =
             typeof window !== "undefined"
-                ? localStorage.getItem("token") ||
+                ? localStorage.getItem("vlab_token") ||
+                localStorage.getItem("token") ||
                 localStorage.getItem("authToken") ||
                 sessionStorage.getItem("token")
                 : null;
@@ -246,7 +247,8 @@ export function LabsGrid() {
     const handleSeeAll = () => {
         const token =
             typeof window !== "undefined"
-                ? localStorage.getItem("token") ||
+                ? localStorage.getItem("vlab_token") ||
+                localStorage.getItem("token") ||
                 localStorage.getItem("authToken") ||
                 sessionStorage.getItem("token")
                 : null;

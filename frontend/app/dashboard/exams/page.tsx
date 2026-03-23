@@ -13,10 +13,11 @@ export default function StudentExamsDashboard() {
 
     const loadExams = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('vlab_token');
             if (!token) return router.push('/login');
 
-            const res = await fetch("http://localhost:5000/api/exams/student", {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+            const res = await fetch(`${API_URL}/api/exams/student`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -34,8 +35,9 @@ export default function StudentExamsDashboard() {
 
     const handleStartExam = async (examId: string) => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:5000/api/exams/${examId}/start`, {
+            const token = localStorage.getItem('vlab_token');
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+            const res = await fetch(`${API_URL}/api/exams/${examId}/start`, {
                 method: "POST",
                 headers: { 'Authorization': `Bearer ${token}` }
             });

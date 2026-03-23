@@ -78,7 +78,8 @@ function useAuthNavigate() {
     return (labHref: string) => {
         const token =
             typeof window !== "undefined"
-                ? localStorage.getItem("token") ||
+                ? localStorage.getItem("vlab_token") ||
+                localStorage.getItem("token") ||
                 localStorage.getItem("authToken") ||
                 sessionStorage.getItem("token")
                 : null;
